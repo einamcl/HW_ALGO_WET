@@ -8,11 +8,17 @@ public class DynamicGraph {
 
     }
 
-    public GraphNode insertNode(int nodeKey){
 
+    public GraphNode insertNode(int nodeKey){
+        GraphNode  node = new GraphNode(nodeKey);
+        return node;
     }
 
-    public void deleteNode(GraphNode node){}
+    public void deleteNode(GraphNode node){
+        if (node.outegdes && node.inedges)
+            return;
+        node =  null;
+    }
 
     public GraphEdge insertEdge(GraphNode from, GraphNode to){}
 

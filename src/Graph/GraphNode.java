@@ -1,20 +1,21 @@
 package Graph;
 
 public class GraphNode{
+  private int key;
   private GraphNode parent = null;
   private GraphNode child = null;
 
-
-  private int nodeKey;
-
-  public int getOutDegree(){
+  public GraphNode(int key){
+    this.key = key;
   }
 
-  public int getInDegree(){
-  }
+
+  public int getOutDegree(){}
+
+  public int getInDegree(){}
 
   public int getkey(){
-    return nodeKey;
+    return this.key;
   }
 
 }
