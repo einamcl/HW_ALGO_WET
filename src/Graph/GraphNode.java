@@ -1,21 +1,25 @@
 package Graph;
 
 public class GraphNode{
-  private int key;
-  private GraphNode parent = null;
-  private GraphNode child = null;
+  public GraphNode Prev = null;
+  public GraphNode Next = null;
+  public int nodeKey;
+  public Doubly_Linked_Edge In_Edge;
+  public Doubly_Linked_Edge Out_Edge;
 
-  public GraphNode(int key){
-    this.key = key;
+  public GraphNode(int nodeKey) {
+    this.nodeKey=nodeKey;
   }
 
 
-  public int getOutDegree(){}
+  public int getOutDegree(){
+  }
 
-  public int getInDegree(){}
+  public int getInDegree(){
+  }
 
   public int getkey(){
-    return this.key;
+    return nodeKey;
   }
 
 }
