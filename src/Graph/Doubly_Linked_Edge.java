@@ -43,4 +43,3 @@ class Doubly_Linked_Edge {
     }
 
 }
-}
