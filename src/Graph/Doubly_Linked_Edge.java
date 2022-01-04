@@ -3,8 +3,8 @@ package Graph;
 class Doubly_Linked_Edge {
     //A node class for doubly linked list
 
-    //Initially, head and tail is set to null
-    GraphNode head_edge, tail_edge = null;
+    //Initially, heaed and tail is set to null
+    GraphNode head, tail = null;
 
     //add a node to the list of edges
     public GraphNode addNode(int nodeKey) {
@@ -12,21 +12,21 @@ class Doubly_Linked_Edge {
         GraphNode newNode = new GraphNode(nodeKey);
 
         //if list is empty, head and tail points to newNode
-        if (head_edge == null) {
-            head_edge = tail_edge = newNode;
+        if (head == null) {
+            head = tail = newNode;
             //head's previous will be null
-            head_edge.Prev = null;
+            head.Prev = null;
             //tail's next will be null
         } else {
-            //add newNode to the end of list. tail->next set to newNode
-            head_edge.Next = newNode;
-            //newNode->previous set to tail
-            newNode.Prev = tail_edge;
-            //            //newNode becomes new tail
-            head_edge = newNode;
-            //tail's next point to null
+            //add newNode to the start of list.
+            head.Prev = newNode;
+            //newNode->next set to head
+            newNode.Next = head;
+            //            //newNode becomes new head
+            head = newNode;
+            //head's next point to null
         }
-        head_edge.Next = null;
+        head.Prev = null;
         return newNode;
     }
     public void deleteNode(GraphNode node){

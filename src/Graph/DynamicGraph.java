@@ -12,7 +12,7 @@ public class DynamicGraph {
     }
 
     public void deleteNode(GraphNode node){
-        if(node.In_Edge.head_edge!=null||node.Out_Edge.tail_edge!=null) //If the head or tail are not null, then there is outgoing or incoming edge to the node
+        if(node.In_Edge.head!=null||node.Out_Edge.tail!=null) //If the head or tail are not null, then there is outgoing or incoming edge to the node
             return;
         else
         {
@@ -43,11 +43,63 @@ public class DynamicGraph {
         To_Edge.In_Edge.deleteNode(From_Edge);
     }
 
-/*
-    public RootedTree scc(){}
+
+    public RootedTree scc(){
+
+    }
+
+    public void enque(Doubly_Linked Q, GraphNode node)
+    {
+        Q.tail=node;
+        node.Next=null;
+    }
+    public GraphNode deque(Doubly_Linked Q)
+    {
+        GraphNode temp=Q.head;
+        Q.head=temp.Next;
+        return temp;
+    }
 
 
-    public RootedTree bfs(GraphNode source){}
-/*/
+
+    public RootedTree BFS(GraphNode source) {
+       Doubly_Linked queue=new Doubly_Linked();
+       BFS_Init(source,queue);
+       while(queue.head!=null)
+       {
+           GraphNode u = deque(queue);
+           GraphNode temp = u.Out_Edge.head;
+           while( temp != null){
+               if(temp.color.equals("white")){
+                   temp.color = "gray";
+                   temp.time = u.time+1;
+                   temp.parent = u;
+                   enque(queue, temp);
+                   temp = temp.Next;
+               }
+               u.color = "black";
+           }
+       }
+       RootedTree tree = new RootedTree();
+       tree.source = source;
+       return tree;
+    }
+
+ public void BFS_Init(GraphNode source,Doubly_Linked Queue)
+ {
+     GraphNode temp=source.Next;
+     while(temp!=null)
+     {
+         temp.color="white";
+         temp.time=Integer.MAX_VALUE;
+         temp.parent=null;
+         temp=temp.Next;
+     }
+     source.color="gray";
+     source.time=0;
+     source.parent=null;
+     Queue.addNode(0);
+ }
+
 
 }
