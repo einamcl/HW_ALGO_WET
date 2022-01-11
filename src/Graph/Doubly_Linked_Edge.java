@@ -19,25 +19,25 @@ class Doubly_Linked_Edge {
             //tail's next will be null
         } else {
             //add newNode to the start of list.
-            head.Prev = newNode;
+            head.Prev_Edge = newNode;
             //newNode->next set to head
-            newNode.Next = head;
+            newNode.Next_Edge = head;
             //            //newNode becomes new head
             head = newNode;
             //head's next point to null
         }
-        head.Prev = null;
+        head.Prev_Edge = null;
         return newNode;
     }
     public void deleteNode(GraphNode node){
 
-        if(node.Prev!=null) {
-            GraphNode node_prev = node.Prev;
-            node_prev.Next=node.Next;
+        if(node.Prev_Edge!=null) {
+            GraphNode node_prev = node.Prev_Edge;
+            node_prev.Next_Edge=node.Next_Edge;
         }
-        if(node.Next!=null) {
-            GraphNode node_next= node.Next;
-            node_next.Prev=node.Prev;
+        if(node.Next_Edge!=null) {
+            GraphNode node_next= node.Next_Edge;
+            node_next.Prev_Edge=node.Prev_Edge;
         }
 
     }

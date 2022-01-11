@@ -1,4 +1,8 @@
 package Graph;
+
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 public class GraphNode{
   public GraphNode Prev = null;
   public GraphNode Next = null;
@@ -11,6 +15,9 @@ public class GraphNode{
   public  GraphNode root;
   public String color;
   public int time;
+  public int fin_time;
+  public GraphNode Next_Edge=null;
+  public GraphNode Prev_Edge=null;
 
 
 
@@ -27,7 +34,7 @@ public class GraphNode{
     this.nodeKey = 0;
   }
   public int getOutDegree(){
-    GraphNode temp=this.Out_Edge.head_edge;
+    GraphNode temp=this.Out_Edge.head;
     int count_out = 0;
     if (temp.nodeKey==0)
       return count_out;
@@ -39,7 +46,7 @@ public class GraphNode{
   }
 
   public int getInDegree(){
-    GraphNode temp=this.In_Edge.head_edge;
+    GraphNode temp=this.In_Edge.head;
     int count_in = 0;
     if (temp.nodeKey==0) //Nodekey 0 is nonexisting/null
       return count_in;

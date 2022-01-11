@@ -2,7 +2,7 @@ package Graph;
 
 public class DynamicGraph {
     public  Doubly_Linked Node_List=new Doubly_Linked();
-
+    public Doubly_Linked_Fin Fin_Times=new Doubly_Linked_Fin();
     public DynamicGraph(){
 
     }
@@ -44,9 +44,7 @@ public class DynamicGraph {
     }
 
 
-    public RootedTree scc(){
 
-    }
 
     public void enque(Doubly_Linked Q, GraphNode node)
     {
@@ -69,13 +67,15 @@ public class DynamicGraph {
        {
            GraphNode u = deque(queue);
            GraphNode temp = u.Out_Edge.head;
+           u.left_child=temp;
            while( temp != null){
                if(temp.color.equals("white")){
                    temp.color = "gray";
                    temp.time = u.time+1;
                    temp.parent = u;
                    enque(queue, temp);
-                   temp = temp.Next;
+                   temp.right_sibling=temp.Next;
+                   temp = temp.Next_Edge;
                }
                u.color = "black";
            }
@@ -98,8 +98,58 @@ public class DynamicGraph {
      source.color="gray";
      source.time=0;
      source.parent=null;
+     Queue.head=null;
      Queue.addNode(0);
  }
+ public void DFS_Visit(GraphNode node,int time)
+ {
+     time+=1;
+     node.time=time;
+     node.color="gray";
+     GraphNode temp=node.Out_Edge.head;
+     node.left_child=temp;
+     while(temp!=null){
+         if(temp.color=="white"){
+             temp.parent=node;
+             DFS_Visit(temp,time);
+         }
+         temp.right_sibling=temp.Next_Edge;
+         temp=temp.Next_Edge;
+     }
+     node.color="black";
+     time+=1;
+     node.fin_time=time;
+     Fin_Times.addNode(node.nodeKey);
 
+ }
+public RootedTree DFS(GraphNode source)
+{
+    source.color="white";
+    source.parent=null;
+    GraphNode temp=source.Next;
+    while(temp!=null)
+    {
+        temp.color="white";
+        temp.parent=null;
+        temp=temp.Next;
+    }
+    int time=0;
+    temp=source;
+    while(temp!=null){
+        if(temp.color=="white")
+            DFS_Visit(temp,time);
+        temp=temp.Next;
+    }
+    RootedTree tree = new RootedTree();
+    tree.source = source;
+    return tree;
+}
+    public RootedTree scc(GraphNode source){
+        DFS(source);
+
+
+
+
+    }
 
 }
