@@ -36,6 +36,12 @@ public class DynamicGraph {
         if(To.In_Edge==null){
             To.In_Edge = new Doubly_Linked_Edge();
         }
+        if(From.In_Edge==null){
+            From.In_Edge = new Doubly_Linked_Edge();
+        }
+        if(To.Out_Edge==null){
+            To.Out_Edge = new Doubly_Linked_Edge();
+        }
         From.Out_Edge.addNode(To);
         To.In_Edge.addNode(From);
         GraphEdge Edge = new GraphEdge(From, To);
