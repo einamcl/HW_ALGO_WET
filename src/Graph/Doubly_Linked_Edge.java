@@ -6,10 +6,11 @@ class Doubly_Linked_Edge {
     //Initially, heaed and tail is set to null
     GraphNode head, tail = null;
 
+
     //add a node to the list of edges
-    public GraphNode addNode(int nodeKey) {
+    public GraphNode addNode(GraphNode node) {
         //Create a new node
-        GraphNode newNode = new GraphNode(nodeKey);
+        GraphNode newNode = node;
 
         //if list is empty, head and tail points to newNode
         if (head == null) {

@@ -44,6 +44,7 @@ public class RootedTree {
     }
     public RootedTree scc(GraphNode source){
         this.source=source;
+        return null;
     }
 
 

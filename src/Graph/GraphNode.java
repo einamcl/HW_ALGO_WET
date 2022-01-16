@@ -53,6 +53,7 @@ public class GraphNode{
     while(temp.Next!=null)
     {
       count_in++;
+      temp = temp.Next;
     }
     return count_in;
   }

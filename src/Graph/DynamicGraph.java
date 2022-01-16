@@ -30,8 +30,8 @@ public class DynamicGraph {
     }
 
     public GraphEdge insertEdge(GraphNode From, GraphNode To) {
-        From.Out_Edge.addNode(To.nodeKey);
-        To.In_Edge.addNode(From.nodeKey);
+        From.Out_Edge.addNode(To);
+        To.In_Edge.addNode(From);
         GraphEdge Edge = new GraphEdge(From, To);
         return Edge;
     }
@@ -54,7 +54,7 @@ public class DynamicGraph {
         Q.head = temp.Next;
         return temp;
     }
-
+        return null;
 
     public RootedTree BFS(GraphNode source) {
         Doubly_Linked queue = new Doubly_Linked();
