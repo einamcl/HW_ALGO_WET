@@ -56,12 +56,16 @@ public class DynamicGraph {
     }
 
 
-    public void enque(Doubly_Linked Q, GraphNode node) {
+    public void enque(Queue Q, GraphNode node) {
+        if(Q.head==null)
+        {
+            Q.head=node;
+        }
         Q.tail = node;
-        node.Next = null;
+
     }
 
-    public GraphNode deque(Doubly_Linked Q) {
+    public GraphNode deque(Queue Q) {
         GraphNode temp = Q.head;
         Q.head = temp.Next;
         return temp;
@@ -69,7 +73,7 @@ public class DynamicGraph {
 
 
     public RootedTree BFS(GraphNode source) {
-        Doubly_Linked queue = new Doubly_Linked();
+        Queue queue = new Queue();
         BFS_Init(source, queue);
         while (queue.head != null) {
             GraphNode u = deque(queue);
@@ -84,6 +88,8 @@ public class DynamicGraph {
                     temp.right_sibling = temp.Next;
                     temp = temp.Next_Edge;
                 }
+                else
+                    temp=temp.Next_Edge;
                 u.color = "black";
             }
         }
@@ -92,7 +98,7 @@ public class DynamicGraph {
         return tree;
     }
 
-    public void BFS_Init(GraphNode source, Doubly_Linked Queue) {
+    public void BFS_Init(GraphNode source, Queue queue) {
         GraphNode temp = source.Next;
         while (temp != null) {
             temp.color = "white";
@@ -103,8 +109,7 @@ public class DynamicGraph {
         source.color = "gray";
         source.time = 0;
         source.parent = null;
-        Queue.head = null;
-        Queue.addNode(0);
+        enque(queue,source);
     }
 
     public void DFS_Visit(GraphNode node, int time) {
