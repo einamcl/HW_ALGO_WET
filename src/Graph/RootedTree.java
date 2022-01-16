@@ -42,18 +42,7 @@ public class RootedTree {
             }
         }
     }
-    public RootedTree scc(GraphNode source){
-        this.source=source;
-        return null;
-    }
 
-
-
-/*
-    public void printByLayer(DataOutputStream out){}
-
-    public void preorderPrint((DataOutputStream out){}
-/*/
 
 
 }
