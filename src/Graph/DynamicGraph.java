@@ -1,58 +1,42 @@
 package Graph;
 
 public class DynamicGraph {
-    public Doubly_Linked Node_List = new Doubly_Linked();
-    public Doubly_Linked_Fin Fin_Times = new Doubly_Linked_Fin();
+    Doubly_Linked<GraphNode> graph_nodes;
 
-    public DynamicGraph() {
-
+    public DynamicGraph()
+    {
+        this.graph_nodes= new Doubly_Linked<GraphNode>();
     }
 
-    public GraphNode insertNode(int nodeKey) {
-        return (Node_List.addNode(nodeKey));
+    public GraphNode insertNode(int nodeKey)
+    {
+        GraphNode node = new GraphNode(nodeKey);
+        node.setLoc(graph_nodes.add_to_tail(node));
+        return node;
     }
 
     public void deleteNode(GraphNode node) {
-        if (node.In_Edge.head != null || node.Out_Edge.tail != null) //If the head or tail are not null, then there is outgoing or incoming edge to the node
+        if (node.getInDegree()>0||node.getOutDegree()>0) //If the head or tail are not null, then there is outgoing or incoming edge to the node
             return;
         else {
-            if (node.Prev != null) {
-                GraphNode node_prev = node.Prev;
-                node_prev.Next = node.Next;
-            }
-            if (node.Next != null) {
-                GraphNode node_next = node.Next;
-                node_next.Prev = node.Prev;
-            }
-
+            graph_nodes.deleteNode(node.getMyLocation());
         }
 
     }
 
     public GraphEdge insertEdge(GraphNode From, GraphNode To) {
-        if(From.Out_Edge==null){
-            From.Out_Edge = new Doubly_Linked_Edge();
-        }
-        if(To.In_Edge==null){
-            To.In_Edge = new Doubly_Linked_Edge();
-        }
-        if(From.In_Edge==null){
-            From.In_Edge = new Doubly_Linked_Edge();
-        }
-        if(To.Out_Edge==null){
-            To.Out_Edge = new Doubly_Linked_Edge();
-        }
-        From.Out_Edge.addNode(To);
-        To.In_Edge.addNode(From);
+
         GraphEdge Edge = new GraphEdge(From, To);
+        Edge.setMyOutLocation(From.getOutEdges().add_to_head(Edge));
+        Edge.setMyInLocation(To.getInEdges().add_to_head(Edge));
         return Edge;
     }
 
     public void deleteEdge(GraphEdge edge) {
         GraphNode From_Edge = edge.From;
         GraphNode To_Edge = edge.To;
-        From_Edge.Out_Edge.deleteNode(To_Edge);
-        To_Edge.In_Edge.deleteNode(From_Edge);
+        From_Edge.Out_Edge.deleteNode(edge.getMyOutLocation());
+        To_Edge.In_Edge.deleteNode(edge.getMyInLocation());
     }
 
 
@@ -67,7 +51,7 @@ public class DynamicGraph {
 
     public GraphNode deque(Queue Q) {
         GraphNode temp = Q.head;
-        Q.head = temp.Next;
+        Q.head = temp.next;
         return temp;
     }
 
@@ -77,21 +61,24 @@ public class DynamicGraph {
         BFS_Init(source, queue);
         while (queue.head != null) {
             GraphNode u = deque(queue);
-            GraphNode temp = u.Out_Edge.head;
-            u.left_child = temp;
+            Node<GraphEdge> temp=u.Out_Edge.getHead();
+            GraphNode current=temp.getData().To;
+            u.left_child= current;
+
             while (temp != null) {
-                if (temp.color.equals("white")) {
-                    temp.color = "gray";
-                    temp.time = u.time + 1;
-                    temp.parent = u;
-                    enque(queue, temp);
-                    temp.right_sibling = temp.Next;
-                    temp = temp.Next_Edge;
+                if (current.color.equals("white")) {
+                    current.color = "gray";
+                    current.distance = u.distance+1;
+                    current.parent = u;
+                    enque(queue, current);
+                    temp = temp.next;
+                    if(temp!=null)
+                    current=temp.getData().To;
                 }
                 else
-                    temp=temp.Next_Edge;
-                u.color = "black";
+                    break;
             }
+            u.color = "black";
         }
         RootedTree tree = new RootedTree();
         tree.source = source;
@@ -99,29 +86,28 @@ public class DynamicGraph {
     }
 
     public void BFS_Init(GraphNode source, Queue queue) {
-        GraphNode temp = source.Next;
+        Node <GraphNode>temp = graph_nodes.getHead();
         while (temp != null) {
-            temp.color = "white";
-            temp.time = Integer.MAX_VALUE;
-            temp.parent = null;
-            temp = temp.Next;
+            temp.getData().color = "white";
+            temp.getData().distance = Integer.MAX_VALUE;
+            temp.getData().parent = null;
+            temp = temp.next;
         }
         source.color = "gray";
-        source.time = 0;
+        source.distance = 0;
         source.parent = null;
         enque(queue,source);
     }
 
     public void DFS_Visit(GraphNode node, int time) {
-        time += 1;
         node.time = time;
         node.color = "gray";
-        GraphNode temp = node.Out_Edge.head;
+        GraphNode temp = node.Out_Edge.getTail().getData().To;
         node.left_child = temp;
         while (temp != null) {
             if (temp.color == "white") {
                 temp.parent = node;
-                DFS_Visit(temp, time);
+                DFS_Visit(temp, time+1);
             }
             temp.right_sibling = temp.Next_Edge;
             temp = temp.Next_Edge;
@@ -129,25 +115,24 @@ public class DynamicGraph {
         node.color = "black";
         time += 1;
         node.fin_time = time;
-        Fin_Times.addNode(node.nodeKey);
 
     }
 
     public RootedTree DFS(GraphNode source) {
         source.color = "white";
         source.parent = null;
-        GraphNode temp = source.Next;
+        GraphNode temp = source.next;
         while (temp != null) {
             temp.color = "white";
             temp.parent = null;
-            temp = temp.Next;
+            temp = temp.next;
         }
         int time = 0;
         temp = source;
         while (temp != null) {
             if (temp.color == "white")
-                DFS_Visit(temp, time);
-            temp = temp.Next;
+                DFS_Visit(temp, time+1);
+            temp = temp.next;
         }
         RootedTree tree = new RootedTree();
         tree.source = source;
@@ -156,10 +141,10 @@ public class DynamicGraph {
 
     public void transpose(GraphNode source) {
         while (source != null) {
-            Doubly_Linked_Edge temp = source.Out_Edge;
+            Doubly_Linked temp = source.Out_Edge;
             source.Out_Edge = source.In_Edge;
             source.In_Edge = temp;
-            source = source.Next;
+            source = source.next;
         }
     }
 
@@ -173,7 +158,7 @@ public class DynamicGraph {
         GraphNode helper = new GraphNode(source.nodeKey);
         while (temp != null) {
             helper.nodeKey = temp.nodeKey;
-            temp = temp.Next;
+            temp = temp.next;
         }
         temp = vertices_final_dfs.source;
         while (temp != null) {
@@ -182,8 +167,8 @@ public class DynamicGraph {
             else
                 new GraphEdge(temp.parent, helper);
 
-            temp = temp.Next;
-            helper = helper.Next;
+            temp = temp.next;
+            helper = helper.next;
         }
         return scc_for;
     }

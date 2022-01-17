@@ -34,6 +34,7 @@ public class test {
         graph.insertEdge(eight, seven);
         graph.insertEdge(nine, five);
         RootedTree tree = graph.BFS(source);
+        RootedTree tree2 = graph.DFS(source);
         try {
             tree.printByLayer(outStream);
         } catch (IOException e) {

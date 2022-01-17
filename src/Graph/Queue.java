@@ -11,16 +11,16 @@ public class Queue {
         if(nodeKey==0)
             return head;
         //if list is empty, head and tail points to newNode
-        if (head.Next == null) {
-            head.Next = newNode;
+        if (head.next == null) {
+            head.next = newNode;
             tail = newNode;
         }
         else {
-            tail.Next = newNode;
-            newNode.Prev = tail;
+            tail.next = newNode;
+            newNode.prev = tail;
             tail = newNode;
         }
-        tail.Next = null;
+        tail.next = null;
         return newNode;
     }
 }

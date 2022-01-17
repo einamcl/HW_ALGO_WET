@@ -1,26 +1,23 @@
+/*
 package Graph;
 
-class Doubly_Linked_Edge {
+//public class Doubly_Linked_Edge<GraphEdge> {
     //A node class for doubly linked list
 
     //Initially, heaed and tail is set to null
-    GraphNode head, tail = null;
+    GraphEdge head, tail = null;
 
 
     //add a node to the list of edges
-    public GraphNode addNode(GraphNode node) {
+    public Insert edge(GraphEdge edge) {
         //Create a new node
-        GraphNode newNode = node;
 
         //if list is empty, head and tail points to newNode
         if (head == null) {
-            head = tail = newNode;
-            //head's previous will be null
-            head.Prev = null;
-            //tail's next will be null
+            head = tail = edge;
         } else {
             //add newNode to the start of list.
-            head.Prev_Edge = newNode;
+            head, = newNode;
             //newNode->next set to head
             newNode.Next_Edge = head;
             //            //newNode becomes new head
@@ -29,6 +26,27 @@ class Doubly_Linked_Edge {
         }
         head.Prev_Edge = null;
         return newNode;
+    }
+
+    public void add_to_out(GraphNode node)
+    {
+        if(this.head==null)
+            this.head=node;
+        else{
+            this.head.Next_Edge=node;
+            node.Prev_Edge=this.head;
+            this.head=node;
+        }
+    }
+    public void add_to_in(GraphNode node)
+    {
+        if(this.head==null)
+            this.head=node;
+        else{
+            this.head.Prev_Edge=node;
+            node.Next_Edge=this.head;
+            this.head=node;
+        }
     }
     public void deleteNode(GraphNode node){
 
@@ -43,4 +61,4 @@ class Doubly_Linked_Edge {
 
     }
 
-}
+}*/

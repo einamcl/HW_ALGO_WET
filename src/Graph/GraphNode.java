@@ -4,11 +4,11 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class GraphNode{
-  public GraphNode Prev = null;
-  public GraphNode Next = null;
+  public GraphNode prev = null;
+  public GraphNode next = null;
   public int nodeKey;
-  public Doubly_Linked_Edge In_Edge;
-  public Doubly_Linked_Edge Out_Edge;
+  public Doubly_Linked<GraphEdge> In_Edge;
+  public Doubly_Linked<GraphEdge> Out_Edge;
   public GraphNode left_child= null;
   public GraphNode right_sibling= null;
   public GraphNode parent = null;
@@ -16,8 +16,10 @@ public class GraphNode{
   public String color;
   public int time;
   public int fin_time;
+  public int distance;
   public GraphNode Next_Edge=null;
   public GraphNode Prev_Edge=null;
+  private Node<GraphNode> myLocation;
 
 
 
@@ -28,36 +30,38 @@ public class GraphNode{
 
   public GraphNode(int nodeKey) {
     this.nodeKey=nodeKey;
+    this.Out_Edge=new Doubly_Linked<GraphEdge>();
+    this.In_Edge= new Doubly_Linked<GraphEdge>();
+  }
+  public GraphNode(GraphNode node)
+  {
+    this.nodeKey=node.nodeKey;
+
   }
 
   public void setRoot(){
     this.nodeKey = 0;
   }
   public int getOutDegree(){
-    GraphNode temp=this.Out_Edge.head;
-    int count_out = 0;
-    if (temp.nodeKey==0)
-      return count_out;
-    while(temp.Next!=null)
-    {
-      count_out++;
-    }
-    return count_out;
+    return In_Edge.getLength();
   }
 
   public int getInDegree(){
-    GraphNode temp=this.In_Edge.head;
-    int count_in = 0;
-    if (temp.nodeKey==0) //Nodekey 0 is nonexisting/null
-      return count_in;
-    while(temp.Next!=null)
-    {
-      count_in++;
-      temp = temp.Next;
-    }
-    return count_in;
+    return Out_Edge.getLength();
+  }
+  public Node<GraphNode> getMyLocation() {
+    return myLocation;
+  }
+  public Doubly_Linked<GraphEdge> getInEdges() {
+    return In_Edge;
+  }
+  public Doubly_Linked<GraphEdge> getOutEdges() {
+    return Out_Edge;
   }
 
+  public void setLoc(Node<GraphNode> myLocation) {
+    this.myLocation = myLocation;
+  }
 
   public int getkey(){
     return nodeKey;

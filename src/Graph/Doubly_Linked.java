@@ -1,29 +1,63 @@
 package Graph;
 
-class Doubly_Linked {
+class Doubly_Linked<T> {
     //A node class for doubly linked list
-
-    //Initially, head and tail is set to null
-    GraphNode tail = null;
-    GraphNode head = new GraphNode(0);
-
+    //Initially, head and tail is set ro null
+    public Node<T> tail;
+    public Node<T> head;
+    int length;
+    public Doubly_Linked()
+    {
+        this.length=0;
+    }
     //add a node to the list
-    public GraphNode addNode(int nodeKey) {
+    public Node<T> add_to_tail(T data) {
         //Create a new node
-        GraphNode newNode = new GraphNode(nodeKey);
-        if(nodeKey==0)
+
+        if (head== null) {
+            head= new Node<T>(data);
+            tail=head;
+            this.length++;
             return head;
-        //if list is empty, head and tail points to newNode
-        if (head.Next == null) {
-            head.Next = newNode;
-            tail = newNode;
         }
-        else {
-            tail.Next = newNode;
-            newNode.Prev = tail;
-            tail = newNode;
+        tail.next=new Node<T>(data);
+        tail.next.prev=tail; // set new tails prev pointer
+        tail=tail.next;
+        this.length++;
+        return tail;
+    }
+    public Node<T> add_to_head(T data) {
+        //Create a new node
+        Node<T> Head = new Node<T>(data);
+        Head.next=head;
+        if (head!=null) {
+            head.prev = Head;
         }
-        tail.Next = null;
-        return newNode;
+        head=Head;
+        this.length++;
+        return head;
+    }
+    public void deleteNode(Node<T> node) {
+        Node<T> prev=node.prev;
+        Node<T> next=node.next;
+        node.next.prev = prev;
+        node.prev.next = next;
+        if(node==head)
+            head=node.next;
+        if(node==tail)
+            tail=node.prev;
+        this.length--;
+        }
+    public int getLength()
+    {
+        return this.length;
+    }
+
+    public Node<T> getHead() {
+        return head;
+    }
+
+    public Node<T> getTail() {
+        return tail;
     }
 }
