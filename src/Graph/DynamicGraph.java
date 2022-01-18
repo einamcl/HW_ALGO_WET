@@ -2,6 +2,7 @@ package Graph;
 
 public class DynamicGraph {
     Doubly_Linked<GraphNode> graph_nodes;
+    Doubly_Linked<GraphNode> Q;
 
     public DynamicGraph()
     {
@@ -40,29 +41,27 @@ public class DynamicGraph {
     }
 
 
-    public void enque(Queue Q, GraphNode node) {
-        if(Q.head==null)
-        {
-            Q.head=node;
-        }
-        Q.tail = node;
-
+    public void enque(Doubly_Linked<GraphNode> Q, GraphNode node) {
+            Q.add_to_tail(node);
     }
 
-    public GraphNode deque(Queue Q) {
-        GraphNode temp = Q.head;
+    public GraphNode deque(Doubly_Linked<GraphNode> Q) {
+        Node <GraphNode>temp  = Q.getHead();
         Q.head = temp.next;
-        return temp;
+        return temp.getData();
     }
 
 
     public RootedTree BFS(GraphNode source) {
-        Queue queue = new Queue();
+        Doubly_Linked<GraphNode> queue = new Doubly_Linked<GraphNode>();
         BFS_Init(source, queue);
         while (queue.head != null) {
             GraphNode u = deque(queue);
             Node<GraphEdge> temp=u.Out_Edge.getHead();
+            if(temp==null)
+                break;
             GraphNode current=temp.getData().To;
+            if(current!=null)
             u.left_child= current;
 
             while (temp != null) {
@@ -71,6 +70,8 @@ public class DynamicGraph {
                     current.distance = u.distance+1;
                     current.parent = u;
                     enque(queue, current);
+                    if(temp.next!=null)
+                        current.right_sibling=temp.next.getData().To;
                     temp = temp.next;
                     if(temp!=null)
                     current=temp.getData().To;
@@ -84,8 +85,11 @@ public class DynamicGraph {
         tree.source = source;
         return tree;
     }
+    public void find_siblings(){
+        Node <GraphNode>currentNode = graph_nodes.getHead();
 
-    public void BFS_Init(GraphNode source, Queue queue) {
+    }
+    public void BFS_Init(GraphNode source, Doubly_Linked<GraphNode> queue) {
         Node <GraphNode>temp = graph_nodes.getHead();
         while (temp != null) {
             temp.getData().color = "white";
@@ -100,17 +104,25 @@ public class DynamicGraph {
     }
 
     public void DFS_Visit(GraphNode node, int time) {
+        time+=1;
         node.time = time;
         node.color = "gray";
-        GraphNode temp = node.Out_Edge.getTail().getData().To;
-        node.left_child = temp;
-        while (temp != null) {
-            if (temp.color == "white") {
-                temp.parent = node;
-                DFS_Visit(temp, time+1);
+        Node<GraphEdge> temp_edge = node.Out_Edge.getHead();
+        if(temp_edge==null)
+            return;
+        GraphNode current=temp_edge.getData().To;
+        if(current!=null);
+        node.left_child = current;
+        while (temp_edge != null) {
+            if (current.color == "white") {
+                current.parent = node;
+                DFS_Visit(current, time);
             }
-            temp.right_sibling = temp.Next_Edge;
-            temp = temp.Next_Edge;
+            if(temp_edge.next!=null)
+                current.right_sibling=temp_edge.next.getData().To;
+            temp_edge = temp_edge.next;
+            if(temp_edge!=null)
+                current=temp_edge.getData().To;
         }
         node.color = "black";
         time += 1;
@@ -119,19 +131,17 @@ public class DynamicGraph {
     }
 
     public RootedTree DFS(GraphNode source) {
-        source.color = "white";
-        source.parent = null;
-        GraphNode temp = source.next;
+        Node <GraphNode>temp = graph_nodes.getHead();
         while (temp != null) {
-            temp.color = "white";
-            temp.parent = null;
+            temp.getData().color = "white";
+            temp.getData().parent = null;
             temp = temp.next;
         }
         int time = 0;
-        temp = source;
+        temp = graph_nodes.getHead();
         while (temp != null) {
-            if (temp.color == "white")
-                DFS_Visit(temp, time+1);
+            if (temp.getData().color == "white")
+                DFS_Visit(temp.getData(), time);
             temp = temp.next;
         }
         RootedTree tree = new RootedTree();
