@@ -18,13 +18,15 @@ public class test {
         graph.insertEdge(source, three);
         graph.insertEdge(source, two);
         graph.insertEdge(two, three);
-        graph.insertEdge(three,four);
         graph.insertEdge(three,five);
+        graph.insertEdge(three,four);
         graph.insertEdge(five, source);
-        graph.insertEdge(six, two);
         graph.insertEdge(six, seven);
-        graph.insertEdge(eight, five);
+        graph.insertEdge(six, two);
+        graph.insertEdge(seven,eight);
+        graph.insertEdge(seven,source);
         graph.insertEdge(eight, six);
+        graph.insertEdge(eight, five);
         RootedTree tree3= graph.DFS(source);
         RootedTree tree = graph.BFS(source);
         RootedTree tree2 = graph.DFS(source);

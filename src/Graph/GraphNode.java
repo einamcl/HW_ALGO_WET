@@ -43,11 +43,11 @@ public class GraphNode{
     this.nodeKey = 0;
   }
   public int getOutDegree(){
-    return In_Edge.getLength();
+    return Out_Edge.getLength();
   }
 
   public int getInDegree(){
-    return Out_Edge.getLength();
+     return In_Edge.getLength();
   }
   public Node<GraphNode> getMyLocation() {
     return myLocation;
