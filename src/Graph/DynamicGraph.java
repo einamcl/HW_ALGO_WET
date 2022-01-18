@@ -29,8 +29,8 @@ public class DynamicGraph {
     public GraphEdge insertEdge(GraphNode From, GraphNode To) {
 
         GraphEdge Edge = new GraphEdge(From, To);
-        Edge.setMyOutLocation(From.getOutEdges().add_to_head(Edge));
-        Edge.setMyInLocation(To.getInEdges().add_to_head(Edge));
+        Edge.setMyOutLocation(From.Out_Edge.add_to_head(Edge));
+        Edge.setMyInLocation(To.In_Edge.add_to_head(Edge));
         return Edge;
     }
 
@@ -109,7 +109,7 @@ public class DynamicGraph {
         node.time=time;
         node.color="gray";
         Node<GraphEdge> adjList=null;
-            adjList = node.getOutEdges().getTail();
+            adjList = node.Out_Edge.head;
             while(adjList!=null)
             {
                 GraphNode neighbour =adjList.getData().To;
@@ -118,7 +118,7 @@ public class DynamicGraph {
                     neighbour.parent=node;
                     DFS_Visit(neighbour);
                 }
-                adjList=adjList.prev;
+                adjList=adjList.next;
             }
             time++;
             node.fin_time=time;
