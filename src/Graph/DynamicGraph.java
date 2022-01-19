@@ -104,7 +104,7 @@ public class DynamicGraph {
         enque(queue,source);
     }
 
-    public void DFS_Visit(GraphNode node) {
+    public void DFS_Visit(GraphNode node,String time_order,String node_order,Doubly_Linked<GraphNode>) {
         time++;
         node.time=time;
         node.color="gray";
@@ -124,52 +124,7 @@ public class DynamicGraph {
             node.fin_time=time;
         }
 
-
-   /*     if(node.time==0){
-        time+=1;
-        node.time = time;}
-        node.color = "gray";
-        Node<GraphEdge> temp_edge = node.Out_Edge.getHead();
-        if(temp_edge==null) {
-            if(node.fin_time==0) {
-                time++;
-                node.fin_time = time;
-            }
-            return;
-        }
-        GraphNode current=temp_edge.getData().To;
-        if(current!=null);
-        node.left_child = current;
-        while (temp_edge != null) {
-            if (current.color == "white") {
-                current.parent = node;
-                DFS_Visit(current);
-            }
-            if(temp_edge.next!=null)
-                current.right_sibling=temp_edge.next.getData().To;
-            temp_edge = temp_edge.next;
-            if(temp_edge!=null) {
-                current = temp_edge.getData().To;
-                if(current.time==0) {
-                    time++;
-                    current.time=time;
-                }
-                if(current.fin_time==0)
-                {
-                    time++;
-                    current.fin_time=time;
-                }
-            }
-            node.color = "black";
-            if(node.fin_time==0) {
-                time++;
-                node.fin_time = time;
-            }
-        }
-*/
-
-
-    public RootedTree DFS(GraphNode source) {
+    public Doubly_Linked<GraphNode> DFS(GraphNode source,String Order,) {
         Node <GraphNode>temp = graph_nodes.getHead();
         while (temp != null) {
             temp.getData().color = "white";
@@ -178,14 +133,13 @@ public class DynamicGraph {
         }
         time=0;
         temp = graph_nodes.getHead();
+        Doubly_Linked<GraphNode> orderList = new Doubly_Linked<>();
         while (temp != null) {
             if (temp.getData().color == "white")
                 DFS_Visit(temp.getData());
             temp = temp.next;
         }
-        RootedTree tree = new RootedTree();
-        tree.source = source;
-        return tree;
+        return orderList;
     }
 
     public void transpose(GraphNode source) {
@@ -196,30 +150,58 @@ public class DynamicGraph {
             source = source.next;
         }
     }
-
-    public RootedTree scc(GraphNode source) {
-        RootedTree scc_for = new RootedTree();
-        scc_for.source = new GraphNode(0);
-        RootedTree vertices_second_dfs = DFS(source);
-        transpose(vertices_second_dfs.source);
-        RootedTree vertices_final_dfs = DFS(vertices_second_dfs.source);
-        GraphNode temp = vertices_final_dfs.source;
-        GraphNode helper = new GraphNode(source.nodeKey);
-        while (temp != null) {
-            helper.nodeKey = temp.nodeKey;
-            temp = temp.next;
+    public void Clean_From_Dfs()
+    {
+        // clear attributes after DFS run
+        Node <GraphNode>currentNode = graph_nodes.getHead();
+        for (int i=0; i< graph_nodes.getLength();i++)
+        {
+            currentNode.getData().color=null;
+            currentNode.getData().parent=null;
+            currentNode= currentNode.next;
         }
-        temp = vertices_final_dfs.source;
-        while (temp != null) {
-            if (temp.parent == null)
-                new GraphEdge(scc_for.source, helper);
-            else
-                new GraphEdge(temp.parent, helper);
-
-            temp = temp.next;
-            helper = helper.next;
-        }
-        return scc_for;
     }
+
+
+   /* public RootedTree scc()
+    {
+        LinkedList<GraphNode> orderList = runDfs(this.graph_nodes,false,false);
+        this.afterDfsClear();
+        orderList= runDfs(orderList,true,true);
+        RootedTree sccTree = new RootedTree();
+        GraphNode virtualNode = new GraphNode(0);
+        TreeNode<GraphNode> root = new TreeNode<>(virtualNode);
+        sccTree.setRoot(root);
+
+        Node<GraphNode> iterator = orderList.getHead();
+        GraphNode currentNode = null;
+        for (int i=0;i<orderList.getLength();i++)
+        {
+            currentNode =iterator.getData();
+            TreeNode<GraphNode> currentLeaf = new TreeNode<>(currentNode);
+            currentNode.setMyTreeLocation(currentLeaf);
+            TreeNode<GraphNode> parent=null;
+            if (currentNode.getAncestor()==null) // no parent
+                parent=root;
+            else // has parent
+                parent= currentNode.getAncestor().getMyTreeLocation();
+            currentLeaf.setParent(parent);
+            if (parent.getLeft_child()==null)
+                parent.setLeft_child(currentLeaf);
+            else
+            {
+                TreeNode<GraphNode>child =parent.getLeft_child();
+                if (child.getRight_sibling()==null)
+                    child.setRight_sibling(currentLeaf);
+                else
+                    child.getMostRight().setRight_sibling(currentLeaf);
+                child.setMostRight(currentLeaf);
+            }
+            iterator=iterator.next;
+        }
+        this.afterDfsClear();
+        return sccTree;
+
+    }*/
 }
 

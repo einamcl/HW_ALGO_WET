@@ -28,6 +28,8 @@ public class test {
         graph.insertEdge(eight, six);
         graph.insertEdge(eight, five);
         RootedTree tree3= graph.DFS(source);
+        graph.Clean_From_Dfs();
+        RootedTree sccTree = graph.scc(source);
         RootedTree tree = graph.BFS(source);
         RootedTree tree2 = graph.DFS(source);
         try {
