@@ -22,13 +22,18 @@ public class test {
         graph.insertEdge(one,nine);
         graph.insertEdge(seven, one);
         graph.insertEdge(twen, five);
+//        RootedTree tree3= graph.DFS(source);
+//        graph.Clean_From_Dfs();
+//        RootedTree sccTree = graph.scc(source);
+        RootedTree tree = graph.BFS(source);
+//        RootedTree tree2 = graph.DFS(source);
         try {
-            tree.printByLayer(outStream);
+            tree.preorderPrint(outStream, source);
         } catch (IOException e) {
             e.printStackTrace();
         }
         try {
-            tree.preorderPrint(null);
+            tree.printByLayer(outStream);
         } catch (IOException e) {
             e.printStackTrace();
         }

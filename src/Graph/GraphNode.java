@@ -23,7 +23,6 @@ public class GraphNode{
 
 
 
-
   public GraphNode getLeft_child() {
     return left_child;
   }

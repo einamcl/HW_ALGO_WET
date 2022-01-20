@@ -6,6 +6,7 @@ class Doubly_Linked<T> {
     public Node<T> tail;
     public Node<T> head;
     int length;
+
     public Doubly_Linked()
     {
         this.length=0;
@@ -47,7 +48,7 @@ class Doubly_Linked<T> {
         if(node==tail)
             tail=node.prev;
         this.length--;
-        }
+    }
     public int getLength()
     {
         return this.length;
