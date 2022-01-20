@@ -124,7 +124,7 @@ public class DynamicGraph {
             node.fin_time=time;
         }
 
-    public Doubly_Linked<GraphNode> DFS(GraphNode source,String Order,) {
+    public Doubly_Linked<GraphNode> DFS(GraphNode source,String Order) {
         Node <GraphNode>temp = graph_nodes.getHead();
         while (temp != null) {
             temp.getData().color = "white";
