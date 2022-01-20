@@ -22,10 +22,10 @@ public class test {
         graph.insertEdge(one,nine);
         graph.insertEdge(seven, one);
         graph.insertEdge(twen, five);
-//        RootedTree tree3= graph.DFS(source);
+         RootedTree tree= graph.BFS(source);
 //        graph.Clean_From_Dfs();
 //        RootedTree sccTree = graph.scc(source);
-        RootedTree tree = graph.BFS(source);
+//        RootedTree tree = graph.BFS(source);
 //        RootedTree tree2 = graph.DFS(source);
         try {
             tree.preorderPrint(outStream, source);
