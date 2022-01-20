@@ -104,7 +104,7 @@ public class DynamicGraph {
         enque(queue,source);
     }
 
-    public void DFS_Visit(GraphNode node,String time_order,String node_order,Doubly_Linked<GraphNode>) {
+    public void DFS_Visit(GraphNode node) {
         time++;
         node.time=time;
         node.color="gray";
