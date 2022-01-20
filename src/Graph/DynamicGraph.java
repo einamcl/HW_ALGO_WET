@@ -43,7 +43,7 @@ public class DynamicGraph {
 
 
     public void enque(Doubly_Linked<GraphNode> Q, GraphNode node) {
-            Q.add_to_tail(node);
+        Q.add_to_tail(node);
     }
 
     public GraphNode deque(Doubly_Linked<GraphNode> Q) {
@@ -56,17 +56,18 @@ public class DynamicGraph {
     public RootedTree BFS(GraphNode source) {
         Doubly_Linked<GraphNode> queue = new Doubly_Linked<GraphNode>();
         BFS_Init(source, queue);
+        GraphNode current=null;
         while (queue.head != null) {
             GraphNode u = deque(queue);
             Node<GraphEdge> temp=u.Out_Edge.getHead();
-            if(temp==null)
-                break;
-            GraphNode current=temp.getData().To;
-            if(current!=null)
-            u.left_child= current;
+            if(temp!=null)
+                current=temp.getData().To;
+
+            if(current!=null&&current!=u)
+                u.left_child= current;
 
             while (temp != null) {
-                if (current.color.equals("white")) {
+                if (current.color.equals("white")||current.color.equals("gray")) {
                     current.color = "gray";
                     current.distance = u.distance+1;
                     current.parent = u;
@@ -75,7 +76,7 @@ public class DynamicGraph {
                         current.right_sibling=temp.next.getData().To;
                     temp = temp.next;
                     if(temp!=null)
-                    current=temp.getData().To;
+                        current=temp.getData().To;
                 }
                 else
                     break;
@@ -109,22 +110,22 @@ public class DynamicGraph {
         node.time=time;
         node.color="gray";
         Node<GraphEdge> adjList=null;
-            adjList = node.Out_Edge.head;
-            while(adjList!=null)
+        adjList = node.Out_Edge.head;
+        while(adjList!=null)
+        {
+            GraphNode neighbour =adjList.getData().To;
+            if (neighbour.color=="white")
             {
-                GraphNode neighbour =adjList.getData().To;
-                if (neighbour.color=="white")
-                {
-                    neighbour.parent=node;
-                    DFS_Visit(neighbour);
-                }
-                adjList=adjList.next;
+                neighbour.parent=node;
+                DFS_Visit(neighbour);
             }
-            time++;
-            node.fin_time=time;
+            adjList=adjList.next;
         }
+        time++;
+        node.fin_time=time;
+    }
 
-    public Doubly_Linked<GraphNode> DFS(GraphNode source,String Order) {
+    public RootedTree DFS(GraphNode source) {
         Node <GraphNode>temp = graph_nodes.getHead();
         while (temp != null) {
             temp.getData().color = "white";
@@ -139,7 +140,8 @@ public class DynamicGraph {
                 DFS_Visit(temp.getData());
             temp = temp.next;
         }
-        return orderList;
+        RootedTree tree=new RootedTree();
+        return tree;
     }
 
     public void transpose(GraphNode source) {
@@ -204,4 +206,3 @@ public class DynamicGraph {
 
     }*/
 }
-
