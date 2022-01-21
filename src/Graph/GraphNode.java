@@ -6,6 +6,7 @@ import java.io.IOException;
 public class GraphNode{
   public GraphNode prev = null;
   public GraphNode next = null;
+  public GraphNode helper_scc=null;
   public int nodeKey;
   public Doubly_Linked<GraphEdge> In_Edge;
   public Doubly_Linked<GraphEdge> Out_Edge;
@@ -20,7 +21,7 @@ public class GraphNode{
   public GraphNode Next_Edge=null;
   public GraphNode Prev_Edge=null;
   private Node<GraphNode> myLocation;
-
+  public GraphNode mostRight;
 
 
   public GraphNode getLeft_child() {
@@ -61,7 +62,19 @@ public class GraphNode{
   public void setLoc(Node<GraphNode> myLocation) {
     this.myLocation = myLocation;
   }
+  public GraphNode getMostRight() {
+    return mostRight;
+  }
+  public GraphNode getRight_sibling() {
+    return right_sibling;
+  }
 
+  public void setRight_sibling(GraphNode right_sibling) {
+    this.right_sibling = right_sibling;
+  }
+  public void setMostRight(GraphNode mostRight) {
+    this.mostRight = mostRight;
+  }
   public int getkey(){
     return nodeKey;
   }

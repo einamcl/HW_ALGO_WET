@@ -2,7 +2,6 @@ package Graph;
 
 public class DynamicGraph {
     Doubly_Linked<GraphNode> graph_nodes;
-    Doubly_Linked<GraphNode> Q;
     static int time;
 
     public DynamicGraph() {
@@ -42,6 +41,10 @@ public class DynamicGraph {
 
     public void enque(Doubly_Linked<GraphNode> Q, GraphNode node) {
         Q.add_to_tail(node);
+    }
+
+    public void enque_reverse(Doubly_Linked<GraphNode> Q, GraphNode node) {
+        Q.add_to_head(node);
     }
 
     public GraphNode deque(Doubly_Linked<GraphNode> Q) {
@@ -104,48 +107,69 @@ public class DynamicGraph {
         enque(queue, source);
     }
 
-    public void DFS_Visit(GraphNode node) {
+    public void DFS_Visit(GraphNode node, Doubly_Linked<GraphNode> vertices_dfs, boolean Discovery,boolean Reverse) {
         time++;
+        if (Discovery) {
+            enque(vertices_dfs, node);
+        }
         node.time = time;
         node.color = "gray";
-        Node<GraphEdge> adjList = null;
-        adjList = node.Out_Edge.head;
-        while (adjList != null) {
-            GraphNode neighbour = adjList.getData().To;
-            if (neighbour.color == "white") {
-                neighbour.parent = node;
-                DFS_Visit(neighbour);
+        Node<GraphEdge> adj = null;
+        if (!Reverse) {
+            adj = node.getOutEdges().getHead();
+            while (adj != null) {
+                GraphNode neighbor = adj.getData().getTo();
+                if (neighbor.color == "white") {
+                    neighbor.parent = node;
+                    DFS_Visit(neighbor, vertices_dfs, Discovery,Reverse);
+                }
+                adj = adj.next;
             }
-            adjList = adjList.next;
+        } else {
+            adj = node.getInEdges().getHead();
+            while (adj != null) {
+                GraphNode neighbor = adj.getData().getTo();
+                if (neighbor.color == "white") {
+                    neighbor.parent = node;
+                    DFS_Visit(neighbor, vertices_dfs, Discovery,Reverse);
+                }
+                adj = adj.next;
+            }
         }
+
         time++;
         node.fin_time = time;
+        node.color = "black";
+        if (!Discovery) {
+            enque(vertices_dfs, node);
+        }
     }
 
-    public RootedTree DFS(GraphNode source) {
-        Node<GraphNode> temp = graph_nodes.getHead();
+    public Doubly_Linked<GraphNode> DFS(Doubly_Linked<GraphNode> vertices, boolean Discovery,boolean Reverse) {
+        Node<GraphNode> temp = vertices.getHead();
+        Doubly_Linked<GraphNode> vertices_dfs = new Doubly_Linked<>();
         while (temp != null) {
             temp.getData().color = "white";
             temp.getData().parent = null;
             temp = temp.next;
         }
         time = 0;
-        temp = graph_nodes.getHead();
-        Doubly_Linked<GraphNode> orderList = new Doubly_Linked<>();
-        while (temp != null) {
-            if (temp.getData().color == "white")
-                DFS_Visit(temp.getData());
+        temp = vertices.getHead();
+        for (int i = 0; i < vertices.getLength(); i++) {
+            if (temp.getData().color == "white") {
+                DFS_Visit(temp.getData(), vertices_dfs, Discovery,Reverse);
+            }
             temp = temp.next;
         }
-        RootedTree tree = new RootedTree();
-        return tree;
+        return vertices_dfs;
     }
 
-    public void transpose(GraphNode source) {
+    public void transpose(Doubly_Linked vertices) {
+        Node<GraphNode> source = vertices.getHead();
         while (source != null) {
-            Doubly_Linked temp = source.Out_Edge;
-            source.Out_Edge = source.In_Edge;
-            source.In_Edge = temp;
+            Doubly_Linked temp = source.getData().Out_Edge;
+            source.getData().Out_Edge = source.getData().In_Edge;
+            source.getData().In_Edge = temp;
             source = source.next;
         }
     }
@@ -161,6 +185,39 @@ public class DynamicGraph {
     }
 
 
-    // public RootedTree scc()
-    // {
+
+    public RootedTree scc() {
+
+
+        Doubly_Linked<GraphNode> vertices_second = DFS(this.graph_nodes, false,false);
+        transpose(vertices_second);
+        vertices_second = DFS(vertices_second, true,true);
+        RootedTree scc_forest = new RootedTree();
+        scc_forest.source = new GraphNode(0);
+        Node<GraphNode> iterator = vertices_second.getHead();
+        GraphNode temp = iterator.getData();
+
+        for (int i = 0; i < vertices_second.getLength(); i++) {
+            temp= iterator.getData();
+            GraphNode Parent = null;
+            if (temp.parent == null)
+                Parent = scc_forest.source;
+            else
+                Parent = temp.parent;
+            temp.parent = Parent;
+            if (Parent.left_child == null)
+                Parent.left_child = temp;
+            else {
+                GraphNode child=Parent.left_child;
+                if(child.right_sibling==null)
+                    child.setRight_sibling(temp);
+                else
+                    child.getMostRight().setRight_sibling(temp);
+                child.setMostRight(temp);
+            }
+            iterator=iterator.next;
+        }
+        return scc_forest;
+    }
 }
+

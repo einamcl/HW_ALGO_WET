@@ -9,104 +9,103 @@ public class RootedTree {
         this.source = null;
     }
 
-//
-//    public void printByLayerGOOD(DataOutputStream out) throws IOException {
-//        if (this.source == null) {
-//            return;
-//        }
-//        out.writeBytes(this.source.getkey() + "\n");
-//        GraphNode currNode = this.source.left_child;                // use dataoutputstream
-//        GraphNode branch = currNode.parent.right_sibling;                // use dataoutputstream
-//        while (currNode != null) {
-//            printlayer(out, currNode);
-//            if(branch != null && branch.left_child !=null){
-//                printlayer(out,branch.left_child);
-//                branch = branch.parent.right_sibling;
-//            }
-//            else{
-//                out.writeBytes("\n");
-//                currNode = currNode.left_child;
-//            }
-//        }
-//    }
+    public void load_kids( Doubly_Linked<GraphNode> layer, GraphNode currentnode ){ //loads childern into children list
+        if(currentnode!=null) {
+            currentnode = currentnode.left_child;
+            while (currentnode != null) {
+                layer.add_to_tail(currentnode);
+                currentnode= currentnode.right_sibling;
+            }
+        }
+    }
 
-
-//    public void printlayerGOOD(DataOutputStream out, GraphNode currNode) throws IOException {
-//        GraphNode layer = currNode;
-//        while (currNode != null) {
-//            layer = printRightSiblings(out, layer);
-//            if (layer != null && layer.parent != null && layer.parent.right_sibling != null && layer.parent.right_sibling.left_child != null) {
-//                out.writeBytes(",");
-//                layer = layer.parent.right_sibling.left_child;
-//                if (layer == null)
-//                    break;
-//            } else break;
-//        }
-//    }
-
-//    public GraphNode printRightSiblings(DataOutputStream out,GraphNode currNode) throws IOException {
-//        if(currNode == null) return null;
-//        GraphNode temp = null;
-//        out.writeBytes(currNode.getkey()+ "");
-//        currNode= currNode.right_sibling;
-//        while (currNode != null){
-//            out.writeBytes(","+ currNode.getkey() + "");
-//            temp= currNode;
-//            currNode = currNode.right_sibling;
-//        }
-//        return temp;
-//    }
+    // printlayer prints every node in parent_layer,
+    // after every node it printed, printlayer loads its children to children_layer
+    public void printlayer(DataOutputStream out,  Doubly_Linked<GraphNode> parent_layer, Doubly_Linked<GraphNode> children_layer) throws IOException {
+        if(parent_layer.getLength() ==0) return;
+        while (parent_layer.getLength() > 1) {
+            Node<GraphNode> node = parent_layer.head;
+            out.writeBytes(node.getData().getkey() + ",");
+            load_kids(children_layer, node.getData());
+            parent_layer.deleteNode(node);
+        }
+        if(parent_layer.getLength() ==1){
+            Node<GraphNode> node = parent_layer.head;
+            out.writeBytes(node.getData().getkey() + "");
+            load_kids(children_layer, node.getData());
+            parent_layer.deleteNode(node);
+        }
+    }
 
     public void printByLayer(DataOutputStream out) throws IOException {
         if (this.source == null) {
             return;
         }
-        out.writeBytes(this.source.getkey() + "\n");
-        GraphNode currNode = this.source.left_child;                // use dataoutputstream
-        while (currNode != null) {
-            printlayer(out, currNode);
+        Doubly_Linked<GraphNode> parent_layer = new Doubly_Linked<GraphNode>();
+        Doubly_Linked<GraphNode> child_layer = new Doubly_Linked<GraphNode>();
+        Doubly_Linked temp;
+        GraphNode currNode = this.source;
+        parent_layer.add_to_head(currNode);
+        while (parent_layer.getLength() + child_layer.getLength() > 0) {
+            printlayer(out, parent_layer, child_layer);
             out.writeBytes("\n");
-            currNode = currNode.left_child;
+            temp = parent_layer;
+            parent_layer = child_layer;
+            child_layer = temp;
         }
     }
 
-    public void printlayer(DataOutputStream out, GraphNode currNode) throws IOException {
-        GraphNode layer = currNode;
-        while (layer != null) {
-            layer = printRightSiblings(out, layer);
-            if (layer != null && layer.parent != null && layer.parent.right_sibling != null && layer.parent.right_sibling.left_child != null) {
-                out.writeBytes(",");
-                layer =layer.parent.right_sibling.left_child;
-            } else break;
+
+    public void preorderPrint(DataOutputStream out) throws IOException {
+        out.writeBytes("preorder");
+        int parent_sibling = 1;
+        int child= 0;
+        GraphNode x = this.source;
+        int from = parent_sibling;
+        while(x!=null){
+            if(from == parent_sibling){
+                if(x.right_sibling== null && x.parent== null){
+                    out.writeBytes(x.getkey()+"");
+                }
+                else
+                {
+                    out.writeBytes(x.getkey()+",");
+                }
+                if(x.left_child !=null){
+                    x= x.left_child;
+                }
+                else {
+                    if (x.right_sibling != null) {
+                        x = x.right_sibling;
+                    }
+                    else {
+                        from = child;
+                        x= x.parent;
+                    }
+                }
+            }
+            else{
+                if(x.right_sibling!=null){
+                    from= parent_sibling;
+                    x= x.right_sibling;
+                }
+                else {
+                    x= x.parent;
+                }
+            }
         }
     }
-
-    public GraphNode printRightSiblings(DataOutputStream out,GraphNode currNode) throws IOException {
-        if(currNode == null) return null;
-        GraphNode temp = null;
-        out.writeBytes(currNode.getkey()+ "");
-        currNode= currNode.right_sibling;
-        while (currNode != null){
-            out.writeBytes(","+ currNode.getkey() + "");
-            temp= currNode;
-            currNode = currNode.right_sibling;
-        }
-        return temp;
-    }
-
-    public void preorderPrint_helper(DataOutputStream out, GraphNode currNode) throws IOException {
-        if (currNode == null) { return;}
-        out.writeBytes("," + currNode.getkey() + "");
-        preorderPrint_helper(out, currNode.left_child);
-        preorderPrint_helper(out, currNode.right_sibling);
-
-    }
-
-    public void preorderPrint(DataOutputStream out,GraphNode currNode ) throws IOException{
-        out.writeBytes(currNode.getkey()+ "");
-        preorderPrint_helper(out,currNode.left_child);
-        out.writeBytes( "\n\n");
-        }
 }
 
-
+//    public GraphNode printRightSiblings(DataOutputStream out,GraphNode currNode) throws IOException {
+//        if(currNode == null) return null;
+//        GraphNode temp = null;
+//        out.writeBytes(currNode.getKey()+ "");
+//        currNode= currNode.right_sibling;
+//        while (currNode != null){
+//            out.writeBytes(","+ currNode.getKey() + "");
+//            temp= currNode;
+//            currNode = currNode.right_sibling;
+//        }
+//        return temp;
+//    }

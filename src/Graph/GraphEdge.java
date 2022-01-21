@@ -10,6 +10,23 @@ public class GraphEdge {
         this.From = From;
         this.To = To;
     }
+
+    public GraphNode getTo()
+    {
+        return this.To;
+    }
+    public GraphNode getFrom()
+    {
+        return this.From;
+    }
+    public void setTo(GraphNode To)
+    {
+        this.To=To;
+    }
+    public void setFrom(GraphNode From)
+    {
+        this.From=From;
+    }
     public  Node<GraphEdge> getMyInLocation() {
         return myInLocation;
     }
