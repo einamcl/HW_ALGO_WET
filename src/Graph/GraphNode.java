@@ -6,24 +6,29 @@ import java.io.IOException;
 public class GraphNode{
   public GraphNode prev = null;
   public GraphNode next = null;
-  public GraphNode helper_scc=null;
   public int nodeKey;
   public Doubly_Linked<GraphEdge> In_Edge;
   public Doubly_Linked<GraphEdge> Out_Edge;
   public GraphNode left_child= null;
   public GraphNode right_sibling= null;
   public GraphNode parent = null;
-  public  GraphNode root;
   public String color;
   public int time;
   public int fin_time;
   public int distance;
   public GraphNode Next_Edge=null;
   public GraphNode Prev_Edge=null;
-  private Node<GraphNode> myLocation;
+  private SCC_NODE<GraphNode> myLocation;
   public GraphNode mostRight;
+  private Node<GraphNode> node_loc;
 
+  public Node<GraphNode> get_node() {
+    return node_loc;
+  }
 
+  public void set_node(Node<GraphNode> myLocation) {
+    this.node_loc = node_loc;
+  }
   public GraphNode getLeft_child() {
     return left_child;
   }
@@ -49,18 +54,17 @@ public class GraphNode{
   public int getInDegree(){
      return In_Edge.getLength();
   }
-  public Node<GraphNode> getMyLocation() {
-    return myLocation;
-  }
   public Doubly_Linked<GraphEdge> getInEdges() {
     return In_Edge;
   }
   public Doubly_Linked<GraphEdge> getOutEdges() {
     return Out_Edge;
   }
-
-  public void setLoc(Node<GraphNode> myLocation) {
+  public void setLoc(SCC_NODE<GraphNode> myLocation) {
     this.myLocation = myLocation;
+  }
+  public SCC_NODE<GraphNode> getLoc() {
+    return myLocation;
   }
   public GraphNode getMostRight() {
     return mostRight;

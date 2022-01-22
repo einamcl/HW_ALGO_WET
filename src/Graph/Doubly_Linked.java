@@ -46,7 +46,7 @@ class Doubly_Linked<T> {
         if(prev!=null)
             node.prev.next = next;
         if(next!=null)
-        node.next.prev = prev;
+            node.next.prev = prev;
 
         if(node==head)
             head=node.next;

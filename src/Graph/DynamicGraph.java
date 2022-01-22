@@ -10,7 +10,7 @@ public class DynamicGraph {
 
     public GraphNode insertNode(int nodeKey) {
         GraphNode node = new GraphNode(nodeKey);
-        graph_nodes.add_to_head(node);
+        node.set_node(graph_nodes.add_to_head(node));
         return node;
     }
 
@@ -18,7 +18,7 @@ public class DynamicGraph {
         if (node.getInDegree() > 0 || node.getOutDegree() > 0) //If the head or tail are not null, then there is outgoing or incoming edge to the node
             return;
         else {
-            graph_nodes.deleteNode(node.getMyLocation());
+            graph_nodes.deleteNode(node.get_node());
         }
 
     }
@@ -32,10 +32,8 @@ public class DynamicGraph {
     }
 
     public void deleteEdge(GraphEdge edge) {
-        GraphNode From_Edge = edge.From;
-        GraphNode To_Edge = edge.To;
-        From_Edge.Out_Edge.deleteNode(edge.getMyOutLocation());
-        To_Edge.In_Edge.deleteNode(edge.getMyInLocation());
+        edge.getFrom().getOutEdges().deleteNode(edge.getMyOutLocation());
+        edge.getTo().getInEdges().deleteNode(edge.getMyInLocation());
     }
 
 
@@ -84,7 +82,8 @@ public class DynamicGraph {
             u.color = "black";
         }
         RootedTree tree = new RootedTree();
-        tree.source = source;
+        SCC_NODE<GraphNode> root = new SCC_NODE<>(source);
+        tree.setRoot(root);
         return tree;
     }
 
@@ -193,28 +192,34 @@ public class DynamicGraph {
         transpose(vertices_second);
         vertices_second = DFS(vertices_second, true,true);
         RootedTree scc_forest = new RootedTree();
-        scc_forest.source = new GraphNode(0);
+        GraphNode source = new GraphNode(0);
         Node<GraphNode> iterator = vertices_second.getTail();
+        SCC_NODE<GraphNode> root = new SCC_NODE<>(source);
+        scc_forest.setRoot(root);
         GraphNode temp = iterator.getData();
 
         for (int i = 0; i < vertices_second.getLength(); i++) {
             temp= iterator.getData();
-            GraphNode Parent = null;
+            SCC_NODE<GraphNode> currentSCC=new SCC_NODE<>(temp);
+            temp.setLoc(currentSCC);
+            SCC_NODE<GraphNode> Parent = null;
             if (temp.parent == null)
-                Parent = scc_forest.source;
+                Parent = root;
             else
-                Parent = temp.parent;
-            temp.parent = Parent;
-            if (Parent.left_child == null)
-                Parent.left_child = temp;
-            else {
-                GraphNode child=Parent.left_child;
-                if(child.right_sibling==null)
-                    child.setRight_sibling(temp);
-                else
-                    child.getMostRight().setRight_sibling(temp);
-                child.setMostRight(temp);
-            }
+                Parent = new SCC_NODE<>(temp.parent);
+            currentSCC.setParent(Parent);
+            if(Parent==null)
+                break;
+                if (Parent.getLeft_child() == null)
+                    Parent.setLeft_child(currentSCC);
+                else {
+                    SCC_NODE<GraphNode> child = Parent.getLeft_child();
+                    if (child.getRight_sibling() == null)
+                        child.setRight_sibling(currentSCC);
+                    else
+                        child.getMostRight().setRight_sibling(currentSCC);
+                    child.setMostRight(currentSCC);
+                }
             iterator=iterator.prev;
         }
         return scc_forest;

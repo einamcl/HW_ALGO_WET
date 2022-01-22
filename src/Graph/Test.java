@@ -311,9 +311,17 @@ public class Test
                     break;
                 }
                 case SCC:
+
                 {
                     T = G.scc();
                     outStream.writeBytes("Print in layers after SCC:" + System.lineSeparator());
+//                    SCC_NODE<GraphNode> first=T.getRoot().getLeft_child();
+//                    while(first!=null)
+//                    {
+//                        outStream.writeBytes(first.getValue().nodeKey +
+//                                "," + System.lineSeparator());
+//                        first=first.getRight_sibling();
+//                    }
                     T.printByLayer(outStream);
                     outStream.writeBytes(System.lineSeparator());
                     outStream.writeBytes("Preorder print after SCC:" + System.lineSeparator());

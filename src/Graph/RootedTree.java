@@ -3,12 +3,17 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class RootedTree {
-    public GraphNode source;
+    public SCC_NODE<GraphNode> source;
 
     public RootedTree() {
         this.source = null;
     }
-
+    public SCC_NODE<GraphNode> getRoot() {
+        return source;
+    }
+    public void setRoot(SCC_NODE<GraphNode> source) {
+        this.source = source;
+    }
     public void load_kids( Doubly_Linked<GraphNode> layer, GraphNode currentnode ){ //loads childern into children list
         if(currentnode!=null) {
             currentnode = currentnode.left_child;
@@ -44,7 +49,7 @@ public class RootedTree {
         Doubly_Linked<GraphNode> parent_layer = new Doubly_Linked<GraphNode>();
         Doubly_Linked<GraphNode> child_layer = new Doubly_Linked<GraphNode>();
         Doubly_Linked temp;
-        GraphNode currNode = this.source;
+        GraphNode currNode = this.source.getValue();
         parent_layer.add_to_head(currNode);
         while (parent_layer.getLength() + child_layer.getLength() > 0) {
             printlayer(out, parent_layer, child_layer);
@@ -60,7 +65,7 @@ public class RootedTree {
         out.writeBytes("preorder");
         int parent_sibling = 1;
         int child= 0;
-        GraphNode x = this.source;
+        GraphNode x = this.source.getValue();
         int from = parent_sibling;
         while(x!=null){
             if(from == parent_sibling){
@@ -97,15 +102,56 @@ public class RootedTree {
     }
 }
 
-//    public GraphNode printRightSiblings(DataOutputStream out,GraphNode currNode) throws IOException {
-//        if(currNode == null) return null;
-//        GraphNode temp = null;
-//        out.writeBytes(currNode.getKey()+ "");
-//        currNode= currNode.right_sibling;
-//        while (currNode != null){
-//            out.writeBytes(","+ currNode.getKey() + "");
-//            temp= currNode;
-//            currNode = currNode.right_sibling;
-//        }
-//        return temp;
-//    }
+class SCC_NODE<T> {
+    private T value;
+    private SCC_NODE<T> parent;
+    private SCC_NODE<T> left_child;
+    private SCC_NODE<T> right_sibling;
+    private SCC_NODE<T> mostRight;
+
+    public SCC_NODE(T node) {
+        this.value = node;
+    }
+
+    public T getValue() {
+        return value;
+    }
+
+    public void setValue(T value) {
+        this.value = value;
+    }
+
+    public SCC_NODE<T> getParent() {
+        return parent;
+    }
+
+    public void setParent(SCC_NODE<T> parent) {
+        this.parent = parent;
+    }
+
+    public SCC_NODE<T> getLeft_child() {
+        return left_child;
+    }
+
+    public void setLeft_child(SCC_NODE<T> left_child) {
+        this.left_child = left_child;
+    }
+
+    public SCC_NODE<T> getRight_sibling() {
+        return right_sibling;
+    }
+
+    public void setRight_sibling(SCC_NODE<T> right_sibling) {
+        this.right_sibling = right_sibling;
+    }
+
+    public SCC_NODE<T> getMostRight() {
+        return mostRight;
+    }
+
+    public void setMostRight(SCC_NODE<T> mostRight) {
+        this.mostRight = mostRight;
+    }
+
+
+}
