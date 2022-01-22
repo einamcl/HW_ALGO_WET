@@ -39,10 +39,15 @@ class Doubly_Linked<T> {
         return head;
     }
     public void deleteNode(Node<T> node) {
+
         Node<T> prev=node.prev;
+
         Node<T> next=node.next;
+        if(prev!=null)
+            node.prev.next = next;
+        if(next!=null)
         node.next.prev = prev;
-        node.prev.next = next;
+
         if(node==head)
             head=node.next;
         if(node==tail)

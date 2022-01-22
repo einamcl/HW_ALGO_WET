@@ -10,7 +10,7 @@ public class DynamicGraph {
 
     public GraphNode insertNode(int nodeKey) {
         GraphNode node = new GraphNode(nodeKey);
-        node.setLoc(graph_nodes.add_to_tail(node));
+        graph_nodes.add_to_head(node);
         return node;
     }
 
@@ -54,7 +54,7 @@ public class DynamicGraph {
     }
 
 
-    public RootedTree BFS(GraphNode source) {
+    public RootedTree bfs(GraphNode source) {
         Doubly_Linked<GraphNode> queue = new Doubly_Linked<GraphNode>();
         BFS_Init(source, queue);
         GraphNode current = null;
@@ -194,7 +194,7 @@ public class DynamicGraph {
         vertices_second = DFS(vertices_second, true,true);
         RootedTree scc_forest = new RootedTree();
         scc_forest.source = new GraphNode(0);
-        Node<GraphNode> iterator = vertices_second.getHead();
+        Node<GraphNode> iterator = vertices_second.getTail();
         GraphNode temp = iterator.getData();
 
         for (int i = 0; i < vertices_second.getLength(); i++) {
@@ -215,7 +215,7 @@ public class DynamicGraph {
                     child.getMostRight().setRight_sibling(temp);
                 child.setMostRight(temp);
             }
-            iterator=iterator.next;
+            iterator=iterator.prev;
         }
         return scc_forest;
     }

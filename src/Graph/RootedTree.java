@@ -25,13 +25,13 @@ public class RootedTree {
         if(parent_layer.getLength() ==0) return;
         while (parent_layer.getLength() > 1) {
             Node<GraphNode> node = parent_layer.head;
-            out.writeBytes(node.getData().getkey() + ",");
+            out.writeBytes(node.getData().getKey() + ",");
             load_kids(children_layer, node.getData());
             parent_layer.deleteNode(node);
         }
         if(parent_layer.getLength() ==1){
             Node<GraphNode> node = parent_layer.head;
-            out.writeBytes(node.getData().getkey() + "");
+            out.writeBytes(node.getData().getKey() + "");
             load_kids(children_layer, node.getData());
             parent_layer.deleteNode(node);
         }
@@ -65,11 +65,11 @@ public class RootedTree {
         while(x!=null){
             if(from == parent_sibling){
                 if(x.right_sibling== null && x.parent== null){
-                    out.writeBytes(x.getkey()+"");
+                    out.writeBytes(x.getKey()+"");
                 }
                 else
                 {
-                    out.writeBytes(x.getkey()+",");
+                    out.writeBytes(x.getKey()+",");
                 }
                 if(x.left_child !=null){
                     x= x.left_child;

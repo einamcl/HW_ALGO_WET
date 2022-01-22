@@ -28,8 +28,8 @@ public class GraphNode{
     return left_child;
   }
 
-  public GraphNode(int nodeKey) {
-    this.nodeKey=nodeKey;
+  public GraphNode(int nodekey) {
+    this.nodeKey=nodekey;
     this.Out_Edge=new Doubly_Linked<GraphEdge>();
     this.In_Edge= new Doubly_Linked<GraphEdge>();
   }
@@ -75,7 +75,7 @@ public class GraphNode{
   public void setMostRight(GraphNode mostRight) {
     this.mostRight = mostRight;
   }
-  public int getkey(){
+  public int getKey(){
     return nodeKey;
   }
 
