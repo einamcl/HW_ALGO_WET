@@ -5,11 +5,28 @@ public class GraphEdge {
     public GraphNode To=null;
     private  Node<GraphEdge> myInLocation;
     private  Node<GraphEdge> myOutLocation;
+    private Node<GraphEdge> data;
 
     public GraphEdge(GraphNode From,GraphNode To) {
         this.From = From;
         this.To = To;
     }
+    public void edge_transpose()
+    {
+        GraphNode temp=this.From;
+        this.From=this.To;
+        this.To=temp;
+    }
+
+    public Node<GraphEdge> getData()
+    {
+        return this.data;
+    }
+    public void setData(Node<GraphEdge> new_data)
+    {
+        this.data=new_data;
+    }
+
 
     public GraphNode getTo()
     {

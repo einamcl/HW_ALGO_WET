@@ -26,22 +26,18 @@ public class DynamicGraph {
     public GraphEdge insertEdge(GraphNode From, GraphNode To) {
 
         GraphEdge Edge = new GraphEdge(From, To);
-        Edge.setMyOutLocation(From.Out_Edge.add_to_head(Edge));
-        Edge.setMyInLocation(To.In_Edge.add_to_head(Edge));
+        Edge.setMyInLocation(From.Out_Edge.add_to_head(Edge));
+        Edge.setMyOutLocation(To.In_Edge.add_to_head(Edge));
         return Edge;
     }
-
     public void deleteEdge(GraphEdge edge) {
-        edge.getFrom().getOutEdges().deleteNode(edge.getMyOutLocation());
-        edge.getTo().getInEdges().deleteNode(edge.getMyInLocation());
+
+        edge.getTo().getInEdges().deleteNode(edge.getMyOutLocation());
+        edge.getFrom().getOutEdges().deleteNode(edge.getMyInLocation());
     }
 
 
     public void enque(Doubly_Linked<GraphNode> Q, GraphNode node) {
-        Q.add_to_tail(node);
-    }
-
-    public void enque_reverse(Doubly_Linked<GraphNode> Q, GraphNode node) {
         Q.add_to_head(node);
     }
 
@@ -106,7 +102,7 @@ public class DynamicGraph {
         enque(queue, source);
     }
 
-    public void DFS_Visit(GraphNode node, Doubly_Linked<GraphNode> vertices_dfs, boolean Discovery,boolean Reverse) {
+    public void DFS_Visit(GraphNode node, Doubly_Linked<GraphNode> vertices_dfs, boolean Discovery) {
         time++;
         if (Discovery) {
             enque(vertices_dfs, node);
@@ -114,28 +110,28 @@ public class DynamicGraph {
         node.time = time;
         node.color = "gray";
         Node<GraphEdge> adj = null;
-        if (!Reverse) {
+        if(!Discovery) {
             adj = node.getOutEdges().getHead();
             while (adj != null) {
                 GraphNode neighbor = adj.getData().getTo();
                 if (neighbor.color == "white") {
                     neighbor.parent = node;
-                    DFS_Visit(neighbor, vertices_dfs, Discovery,Reverse);
-                }
-                adj = adj.next;
-            }
-        } else {
-            adj = node.getInEdges().getHead();
-            while (adj != null) {
-                GraphNode neighbor = adj.getData().getTo();
-                if (neighbor.color == "white") {
-                    neighbor.parent = node;
-                    DFS_Visit(neighbor, vertices_dfs, Discovery,Reverse);
+                    DFS_Visit(neighbor, vertices_dfs, Discovery);
                 }
                 adj = adj.next;
             }
         }
-
+            else {
+                adj = node.getInEdges().getHead();
+                while (adj != null) {
+                    GraphNode neighbor = adj.getData().getTo();
+                    if (neighbor.color == "white") {
+                        neighbor.parent = node;
+                        DFS_Visit(neighbor, vertices_dfs, Discovery);
+                    }
+                    adj = adj.next;
+            }
+        }
         time++;
         node.fin_time = time;
         node.color = "black";
@@ -144,7 +140,7 @@ public class DynamicGraph {
         }
     }
 
-    public Doubly_Linked<GraphNode> DFS(Doubly_Linked<GraphNode> vertices, boolean Discovery,boolean Reverse) {
+    public Doubly_Linked<GraphNode> DFS(Doubly_Linked<GraphNode> vertices, boolean Discovery) {
         Node<GraphNode> temp = vertices.getHead();
         Doubly_Linked<GraphNode> vertices_dfs = new Doubly_Linked<>();
         while (temp != null) {
@@ -154,10 +150,12 @@ public class DynamicGraph {
         }
         time = 0;
         temp = vertices.getHead();
+
         for (int i = 0; i < vertices.getLength(); i++) {
             if (temp.getData().color == "white") {
-                DFS_Visit(temp.getData(), vertices_dfs, Discovery,Reverse);
+                DFS_Visit(temp.getData(), vertices_dfs, Discovery);
             }
+
             temp = temp.next;
         }
         return vertices_dfs;
@@ -165,10 +163,31 @@ public class DynamicGraph {
 
     public void transpose(Doubly_Linked vertices) {
         Node<GraphNode> source = vertices.getHead();
+        Doubly_Linked<GraphEdge>temp=null;
         while (source != null) {
-            Doubly_Linked temp = source.getData().Out_Edge;
+            temp = source.getData().Out_Edge;
             source.getData().Out_Edge = source.getData().In_Edge;
             source.getData().In_Edge = temp;
+            temp = source.getData().Out_Edge;
+            Node<GraphEdge> First= temp.getHead();
+            for(int i=0;i<temp.getLength();i++)
+            {
+                GraphNode from=First.getData().From;
+                GraphNode to=First.getData().To;
+                First.getData().To=from;
+                First.getData().From=to;
+                First=First.next;
+            }
+            temp=source.getData().In_Edge;
+            First=temp.getHead();
+            for(int i=0;i<temp.getLength();i++)
+            {
+                GraphNode from=First.getData().From;
+                GraphNode to=First.getData().To;
+                First.getData().To=from;
+                First.getData().From=to;
+                First=First.next;
+            }
             source = source.next;
         }
     }
@@ -186,18 +205,27 @@ public class DynamicGraph {
 
 
     public RootedTree scc() {
-
-
-        Doubly_Linked<GraphNode> vertices_second = DFS(this.graph_nodes, false,false);
+        Doubly_Linked<GraphNode> vertices_second = DFS(this.graph_nodes, false);
         transpose(vertices_second);
-        vertices_second = DFS(vertices_second, true,true);
+        vertices_second = DFS(vertices_second, true);
+        transpose(vertices_second);
         RootedTree scc_forest = new RootedTree();
         GraphNode source = new GraphNode(0);
         Node<GraphNode> iterator = vertices_second.getTail();
         SCC_NODE<GraphNode> root = new SCC_NODE<>(source);
         scc_forest.setRoot(root);
         GraphNode temp = iterator.getData();
+        Doubly_Linked<GraphNode> Orphans= new Doubly_Linked<GraphNode>();
+        while(iterator!=null)
+        {
 
+            temp= iterator.getData();
+            if(temp.parent==null){
+            enque(Orphans,temp);
+            }
+            iterator=iterator.prev;
+        }
+        iterator= vertices_second.getTail();
         for (int i = 0; i < vertices_second.getLength(); i++) {
             temp= iterator.getData();
             SCC_NODE<GraphNode> currentSCC=new SCC_NODE<>(temp);

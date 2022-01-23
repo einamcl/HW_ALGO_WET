@@ -27,7 +27,7 @@ public class GraphNode{
   }
 
   public void set_node(Node<GraphNode> myLocation) {
-    this.node_loc = node_loc;
+    this.node_loc = myLocation;
   }
   public GraphNode getLeft_child() {
     return left_child;
