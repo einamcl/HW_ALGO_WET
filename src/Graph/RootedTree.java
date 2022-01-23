@@ -14,29 +14,31 @@ public class RootedTree {
     public void setRoot(SCC_NODE<GraphNode> source) {
         this.source = source;
     }
-    public void load_kids( Doubly_Linked<GraphNode> layer, GraphNode currentnode ){ //loads childern into children list
+    public void load_kids(  Doubly_Linked<SCC_NODE> layer, SCC_NODE currentnode ){ //loads childern into children list
         if(currentnode!=null) {
-            currentnode = currentnode.left_child;
+            currentnode = currentnode.getLeft_child();
             while (currentnode != null) {
                 layer.add_to_tail(currentnode);
-                currentnode= currentnode.right_sibling;
+                currentnode= currentnode.getRight_sibling();
             }
         }
     }
 
     // printlayer prints every node in parent_layer,
     // after every node it printed, printlayer loads its children to children_layer
-    public void printlayer(DataOutputStream out,  Doubly_Linked<GraphNode> parent_layer, Doubly_Linked<GraphNode> children_layer) throws IOException {
+    public void printlayer(DataOutputStream out, Doubly_Linked<SCC_NODE> parent_layer, Doubly_Linked<SCC_NODE> children_layer) throws IOException {
+
         if(parent_layer.getLength() ==0) return;
         while (parent_layer.getLength() > 1) {
-            Node<GraphNode> node = parent_layer.head;
-            out.writeBytes(node.getData().getKey() + ",");
+            Node <SCC_NODE> node = parent_layer.head;
+
+            out.writeBytes(node.getData().getValue() + ",");
             load_kids(children_layer, node.getData());
             parent_layer.deleteNode(node);
         }
         if(parent_layer.getLength() ==1){
-            Node<GraphNode> node = parent_layer.head;
-            out.writeBytes(node.getData().getKey() + "");
+            Node<SCC_NODE> node = parent_layer.head;
+            out.writeBytes(node.getData().getValue() + "");
             load_kids(children_layer, node.getData());
             parent_layer.deleteNode(node);
         }
@@ -46,10 +48,10 @@ public class RootedTree {
         if (this.source == null) {
             return;
         }
-        Doubly_Linked<GraphNode> parent_layer = new Doubly_Linked<GraphNode>();
-        Doubly_Linked<GraphNode> child_layer = new Doubly_Linked<GraphNode>();
+        Doubly_Linked<SCC_NODE> parent_layer = new Doubly_Linked<>();
+        Doubly_Linked<SCC_NODE> child_layer = new Doubly_Linked<>();
         Doubly_Linked temp;
-        GraphNode currNode = this.source.getValue();
+        SCC_NODE <GraphNode> currNode = this.source;
         parent_layer.add_to_head(currNode);
         while (parent_layer.getLength() + child_layer.getLength() > 0) {
             printlayer(out, parent_layer, child_layer);
@@ -62,40 +64,39 @@ public class RootedTree {
 
 
     public void preorderPrint(DataOutputStream out) throws IOException {
-        out.writeBytes("preorder");
         int parent_sibling = 1;
         int child= 0;
-        GraphNode x = this.source.getValue();
+        SCC_NODE <GraphNode> x = this.source;
         int from = parent_sibling;
         while(x!=null){
             if(from == parent_sibling){
-                if(x.right_sibling== null && x.parent== null){
-                    out.writeBytes(x.getKey()+"");
+                if(x.getParent()== null){
+                    out.writeBytes(x.getValue()+"");
                 }
                 else
                 {
-                    out.writeBytes(x.getKey()+",");
+                    out.writeBytes(","+x.getValue());
                 }
-                if(x.left_child !=null){
-                    x= x.left_child;
+                if(x.getLeft_child() !=null){
+                    x= x.getLeft_child();
                 }
                 else {
-                    if (x.right_sibling != null) {
-                        x = x.right_sibling;
+                    if (x.getRight_sibling() != null) {
+                        x = x.getRight_sibling();
                     }
                     else {
                         from = child;
-                        x= x.parent;
+                        x= x.getParent();
                     }
                 }
             }
             else{
-                if(x.right_sibling!=null){
+                if(x.getRight_sibling()!=null){
                     from= parent_sibling;
-                    x= x.right_sibling;
+                    x= x.getRight_sibling();
                 }
                 else {
-                    x= x.parent;
+                    x= x.getParent();
                 }
             }
         }
@@ -110,6 +111,7 @@ class SCC_NODE<T> {
     private SCC_NODE<T> mostRight;
 
     public SCC_NODE(T node) {
+
         this.value = node;
     }
 
