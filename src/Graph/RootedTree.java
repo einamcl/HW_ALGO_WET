@@ -21,7 +21,6 @@ public class RootedTree {
                 layer.add_to_tail(currentnode);
                 currentnode= currentnode.getRight_sibling();
 
-
             }
         }
     }
@@ -38,7 +37,7 @@ public class RootedTree {
             parent_layer.deleteNode(node);
         }
         if(parent_layer.getLength() ==1){
-            Node<SCC_NODE> node = parent_layer.head;
+            Node<SCC_NODE> node = parent_layer.getHead();
             out.writeBytes(node.getData().getValue() + "");
             load_kids(children_layer, node.getData());
             parent_layer.deleteNode(node);

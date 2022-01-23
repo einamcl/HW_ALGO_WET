@@ -50,6 +50,8 @@ class Doubly_Linked<T> {
             return;
         if (node.prev == null && node.next == null) {
             node = null;
+            this.tail=null;
+            this.head=null;
             this.length--;
             return;
         }
@@ -58,15 +60,23 @@ class Doubly_Linked<T> {
             node.prev.next = node.next;
         }
         else {
-            if (node.getData() == head.getData()) {
-                Node<T>temp=head.next;
-                temp.prev=null;
-                this.head=temp;
+            if(head == null){
+                int kk = 0;}
+            if (head != null && node.getData() == head.getData()) {
+                if(head.next!=null) {
+                    Node<T> temp = head.next;
+                    temp.prev = null;
+                    this.head = temp;
+                }
             }
-            if (node.getData() == tail.getData()) {
-                Node<T>temp=tail.prev;
-                temp.next=null;
-                this.tail=temp;
+            if (tail != null && node.getData() == tail.getData()) {
+                if(tail.prev!=null) {
+                    Node<T> temp = tail.prev;
+                    if (temp.next != null) {
+                        temp.next = null;
+                    }
+                    this.tail = temp;
+                }
             }
         }
         this.length--;
