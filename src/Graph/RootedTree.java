@@ -20,6 +20,8 @@ public class RootedTree {
             while (currentnode != null) {
                 layer.add_to_tail(currentnode);
                 currentnode= currentnode.getRight_sibling();
+
+
             }
         }
     }
@@ -31,7 +33,6 @@ public class RootedTree {
         if(parent_layer.getLength() ==0) return;
         while (parent_layer.getLength() > 1) {
             Node <SCC_NODE> node = parent_layer.head;
-
             out.writeBytes(node.getData().getValue() + ",");
             load_kids(children_layer, node.getData());
             parent_layer.deleteNode(node);

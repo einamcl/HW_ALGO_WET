@@ -1,5 +1,8 @@
 package Graph;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 public class GraphNode{
   public GraphNode prev = null;
   public GraphNode next = null;
@@ -49,7 +52,7 @@ public class GraphNode{
   }
 
   public int getInDegree(){
-    return In_Edge.getLength();
+     return In_Edge.getLength();
   }
   public Doubly_Linked<GraphEdge> getInEdges() {
     return In_Edge;
@@ -80,8 +83,10 @@ public class GraphNode{
     return nodeKey;
   }
 
+
   @Override
   public String toString(){
     return (getKey()+"");
   }
+
 }

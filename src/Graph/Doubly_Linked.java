@@ -29,6 +29,12 @@ class Doubly_Linked<T> {
     }
     public Node<T> add_to_head(T data) {
         //Create a new node
+        if(this.tail== null){
+            tail= new Node<T>(data);
+            head=tail;
+            this.length++;
+            return tail;
+        }
         Node<T> Head = new Node<T>(data);
         Head.next=head;
         if (head!=null) {
@@ -38,22 +44,26 @@ class Doubly_Linked<T> {
         this.length++;
         return head;
     }
+
     public void deleteNode(Node<T> node) {
-
-        Node<T> prev=node.prev;
-
-        Node<T> next=node.next;
-        if(prev!=null)
-            node.prev.next = next;
-        if(next!=null)
-            node.next.prev = prev;
-
-        if(node==head)
-            head=node.next;
-        if(node==tail)
-            tail=node.prev;
+        if(node == null)
+            return;
+        if (node.prev == null && node.next == null) {
+            node = null;
+        } else {
+            if (node == head)
+                head = node.next;
+            if (node == tail)
+                tail = node.prev;
+            if (node.prev != null && node.next == null)
+                node.prev.next = node.next;
+            if (node.next != null)
+                node.next.prev = node.prev;
+        }
         this.length--;
     }
+
+
     public int getLength()
     {
         return this.length;
