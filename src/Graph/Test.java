@@ -306,6 +306,10 @@ public class Test
                     }
                     else
                     {
+                        int j=0;
+                        if(node.getKey()==93144)
+                            j++;
+
                         outStream.writeBytes("The in degree of node " + node.getKey() +
                                 " is " + node.getInDegree() + System.lineSeparator());
                     }
@@ -318,7 +322,6 @@ public class Test
                     SCC_NODE<GraphNode>grandson=T.source.getLeft_child();
                     while(grandson!=null)
                     {
-                        if(grandson.getValue().getKey()==700030)
                             j++;
                         if(grandson.getLeft_child()!=null)
                             outStream.writeBytes("Grandson:" + grandson.getLeft_child().getValue() + System.lineSeparator());

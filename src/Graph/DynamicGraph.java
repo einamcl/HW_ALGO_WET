@@ -46,7 +46,26 @@ public class DynamicGraph {
         Q.head = temp.next;
         return temp.getData();
     }
+    public void Build_Tree(RootedTree tree){
+        SCC_NODE<GraphNode>root= tree.getRoot();
+        GraphNode temp=root.getValue();
+        SCC_NODE<GraphNode> Parent = null;
+        while(temp!=null)
+        {
+            SCC_NODE<GraphNode> currentSCC=new SCC_NODE<>(temp);
+            temp.setLoc(currentSCC);
+        }
+            temp=root.getValue();
+        while(temp!=null)
+        {
+            SCC_NODE<GraphNode> New_SCC= temp.getLoc();
+            if(temp.parent!=null)
+                Parent=temp.parent.getLoc();
+            New_SCC.setParent(Parent);
+            
 
+        }
+    }
 
     public RootedTree bfs(GraphNode source) {
         Doubly_Linked<GraphNode> queue = new Doubly_Linked<GraphNode>();
@@ -80,6 +99,7 @@ public class DynamicGraph {
         RootedTree tree = new RootedTree();
         SCC_NODE<GraphNode> root = new SCC_NODE<>(source);
         tree.setRoot(root);
+        Build_Tree(tree);
         return tree;
     }
 
@@ -171,13 +191,24 @@ public class DynamicGraph {
         }
     }
 
-    public void Clean_From_Dfs() {
-        // clear attributes after DFS run
+    public void Clean_From_SCC() {
+        // clear attributes after SCC run
         Node<GraphNode> currentNode = graph_nodes.getHead();
+
         for (int i = 0; i < graph_nodes.getLength(); i++) {
-            currentNode.getData().color = null;
-            currentNode.getData().parent = null;
-            currentNode = currentNode.next;
+            if(currentNode.getData().getLoc()!=null) {
+                if (currentNode.getData().getLoc().getRight_sibling() != null)
+                    currentNode.getData().getLoc().setRight_sibling(null);
+                if (currentNode.getData().getLoc().getMostRight() != null)
+                    currentNode.getData().getLoc().setMostRight(null);
+                if (currentNode.getData().getLoc().getParent() != null)
+                    currentNode.getData().getLoc().setParent(null);
+                if (currentNode.getData().getLoc().getLeft_child() != null)
+                    currentNode.getData().getLoc().setLeft_child(null);
+                currentNode = currentNode.next;
+            }
+            else
+                break;
         }
     }
 
@@ -186,9 +217,7 @@ public class DynamicGraph {
     public RootedTree scc() {
         Doubly_Linked<GraphNode> vertices_second = DFS(this.graph_nodes, false);
         transpose(vertices_second);
-
         vertices_second = DFS(vertices_second, true);
-
         RootedTree scc_forest = new RootedTree();
         GraphNode source = new GraphNode(0);
         Node<GraphNode> iterator = vertices_second.getTail();
@@ -231,6 +260,7 @@ public class DynamicGraph {
                 }
             iterator=iterator.prev;
         }
+        this.transpose(vertices_second);
         return scc_forest;
     }
 }
