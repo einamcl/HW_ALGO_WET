@@ -21,18 +21,15 @@ public class GraphNode{
   private SCC_NODE<GraphNode> myLocation;
   public GraphNode mostRight;
   private Node<GraphNode> node_loc;
-
   public Node<GraphNode> get_node() {
     return node_loc;
   }
-
   public void set_node(Node<GraphNode> myLocation) {
     this.node_loc = myLocation;
   }
   public GraphNode getLeft_child() {
     return left_child;
   }
-
   public GraphNode(int nodekey) {
     this.nodeKey=nodekey;
     this.Out_Edge=new Doubly_Linked<GraphEdge>();

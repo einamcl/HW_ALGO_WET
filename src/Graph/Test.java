@@ -21,8 +21,8 @@ interface Constants
 
 class CurrentGraph
 {
-    private GraphNode[] nodes;
-    private MyEdge[] edges;
+    public GraphNode[] nodes;
+    public MyEdge[] edges;
     private int currentNodesIndex;
     private int currentEdgesIndex;
     public CurrentGraph()
@@ -318,8 +318,6 @@ public class Test
                 case SCC:
                 {
                     T = G.scc();
-                    int j=0;
-                    SCC_NODE<GraphNode>grandson=T.source.getLeft_child();
                     outStream.writeBytes("Print in layers after SCC:" + System.lineSeparator());
                     T.printByLayer(outStream);
                     outStream.writeBytes(System.lineSeparator());

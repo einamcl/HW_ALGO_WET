@@ -55,11 +55,14 @@ public class RootedTree {
         parent_layer.add_to_head(currNode);
         while (parent_layer.getLength() + child_layer.getLength() > 0) {
             printlayer(out, parent_layer, child_layer);
+            if(child_layer.getLength()==0)
+                break;
             out.writeBytes("\n");
             temp = parent_layer;
             parent_layer = child_layer;
             child_layer = temp;
         }
+
     }
 
 

@@ -39,6 +39,9 @@ public class DynamicGraph {
 
 
     public void enque(Doubly_Linked<GraphNode> Q, GraphNode node) {
+        int j=0;
+        if(node.getKey()==1002597)
+            j++;
         Q.add_to_head(node);
     }
 
@@ -86,10 +89,11 @@ public class DynamicGraph {
         int k=0;
         while (queue.head != null) {
             GraphNode u = deque(queue);
-            if(u.getKey()==523937)
-                k++;
-
             Node<GraphEdge> temp = u.Out_Edge.getHead();
+            if(temp!=null) {
+                if (temp.getData().getFrom().getKey() == 523937)
+                    k++;
+            }
             if (temp != null) {
                 current = temp.getData().To;
                 //u.left_child=current;
@@ -107,7 +111,11 @@ public class DynamicGraph {
                     current=temp.getData().To;
                 }
                 else
-                    temp=temp.next;
+                {
+                    temp = temp.next;
+                    if(temp!=null)
+                    current = temp.getData().To;
+                }
             }
             u.color = "black";
         }
@@ -151,12 +159,13 @@ public class DynamicGraph {
     public void BFS_Init(GraphNode source, Doubly_Linked<GraphNode> queue) {
         Node<GraphNode> temp = graph_nodes.getHead();
         int j=0;
+
         while (temp != null) {
+            if(temp.getData().nodeKey==1002597)
+            j++;
             temp.getData().color = "white";
             temp.getData().distance = Integer.MAX_VALUE;
             temp.getData().parent = null;
-            if(temp.getData().nodeKey==1002597)
-                j++;
             temp = temp.next;
         }
         source.color = "gray";
