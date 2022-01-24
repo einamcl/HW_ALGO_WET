@@ -30,6 +30,7 @@ public class DynamicGraph {
         Edge.setMyOutLocation(To.getInEdges().add_to_head(Edge));
         return Edge;
     }
+
     public void deleteEdge(GraphEdge edge) {
 
         edge.getTo().getInEdges().deleteNode(edge.getMyOutLocation());
@@ -42,78 +43,120 @@ public class DynamicGraph {
     }
 
     public GraphNode deque(Doubly_Linked<GraphNode> Q) {
-        Node<GraphNode> temp = Q.getHead();
-        Q.head = temp.next;
+        Node<GraphNode> temp = Q.getTail();
+        Q.deleteNode(Q.getTail());
         return temp.getData();
     }
-    public void Build_Tree(RootedTree tree){
-        SCC_NODE<GraphNode>root= tree.getRoot();
-        GraphNode temp=root.getValue();
+
+    public void Build_Tree(RootedTree tree) {
+        SCC_NODE<GraphNode> root = tree.getRoot();
+        GraphNode temp = this.graph_nodes.getHead().getData();
         SCC_NODE<GraphNode> Parent = null;
-        while(temp!=null)
-        {
-            SCC_NODE<GraphNode> currentSCC=new SCC_NODE<>(temp);
+        while (temp != null) {
+            SCC_NODE<GraphNode> currentSCC = new SCC_NODE<>(temp);
             temp.setLoc(currentSCC);
+            temp = temp.next;
         }
-            temp=root.getValue();
-        while(temp!=null)
-        {
-            SCC_NODE<GraphNode> New_SCC= temp.getLoc();
-            if(temp.parent!=null)
-                Parent=temp.parent.getLoc();
-            New_SCC.setParent(Parent);
-            
+        temp = this.graph_nodes.getHead().getData();
+        while (temp != null) {
+            SCC_NODE<GraphNode> New_SCC = temp.getLoc();
+            temp.setLoc(New_SCC);
+            if (temp.parent != null) {
+                Parent = temp.parent.getLoc();
+                New_SCC.setParent(Parent);
+            }
+            if (temp.left_child != null) {
+                New_SCC.setLeft_child(temp.left_child.getLoc());
+            }
+            if (temp.right_sibling != null) {
+                New_SCC.setRight_sibling(temp.right_sibling.getLoc());
+            }
+
+            temp = temp.next;
+
 
         }
     }
 
     public RootedTree bfs(GraphNode source) {
         Doubly_Linked<GraphNode> queue = new Doubly_Linked<GraphNode>();
+        Doubly_Linked<GraphNode> help_arr=new Doubly_Linked<>();
         BFS_Init(source, queue);
         GraphNode current = null;
+        int k=0;
         while (queue.head != null) {
             GraphNode u = deque(queue);
-            Node<GraphEdge> temp = u.getOutEdges().getHead();
+            if(u.getKey()==523937)
+                k++;
+
+            Node<GraphEdge> temp = u.Out_Edge.getHead();
             if (temp != null) {
                 current = temp.getData().To;
-                if (current != null && current != u)
-                    u.left_child = current;
+                //u.left_child=current;
             }
-
+            int j=0;
             while (temp != null) {
-                if (current.color.equals("white") || current.color.equals("gray")) {
+                if (current.color.equals("white")) {
                     current.color = "gray";
                     current.distance = u.distance + 1;
                     current.parent = u;
                     enque(queue, current);
-                    if (temp.next != null)
-                        current.right_sibling = temp.next.getData().To;
-                    temp = temp.next;
-                    if (temp != null)
-                        current = temp.getData().To;
-                } else
-                    break;
+                    enque(help_arr,current);
+                    temp=temp.next;
+                    if(temp!=null)
+                    current=temp.getData().To;
+                }
+                else
+                    temp=temp.next;
             }
             u.color = "black";
         }
-        RootedTree tree = new RootedTree();
+        RootedTree bfsTree = new RootedTree();
         SCC_NODE<GraphNode> root = new SCC_NODE<>(source);
-        tree.setRoot(root);
-        Build_Tree(tree);
-        return tree;
+        source.setLoc(root);
+        Node<GraphNode> iterator = help_arr.getTail();
+        GraphNode thisNode = null;
+        SCC_NODE<GraphNode> parent=null;
+        for ( int i=0;i< help_arr.getLength();i++)
+        {
+            thisNode = iterator.getData();
+
+            SCC_NODE<GraphNode> currentLeaf = new SCC_NODE<>(thisNode);
+            thisNode.setLoc(currentLeaf);
+            parent= thisNode.parent.getLoc();
+            iterator = helper(currentLeaf, parent, iterator);
+        }
+
+        bfsTree.setRoot(root);
+        return bfsTree;
     }
 
-    public void find_siblings() {
-        Node<GraphNode> currentNode = graph_nodes.getHead();
 
+    public Node<GraphNode> helper(SCC_NODE<GraphNode> currentSCC,SCC_NODE<GraphNode>Parent,Node<GraphNode> iterator) {
+        currentSCC.setParent(Parent);
+        if (Parent.getLeft_child() == null)
+            Parent.setLeft_child(currentSCC);
+        else {
+            SCC_NODE<GraphNode> child = Parent.getLeft_child();
+            if (child.getRight_sibling() == null)
+                child.setRight_sibling(currentSCC);
+            else
+                child.getMostRight().setRight_sibling(currentSCC);
+            child.setMostRight(currentSCC);
+        }
+        iterator=iterator.prev;
+        return iterator;
     }
 
     public void BFS_Init(GraphNode source, Doubly_Linked<GraphNode> queue) {
         Node<GraphNode> temp = graph_nodes.getHead();
+        int j=0;
         while (temp != null) {
             temp.getData().color = "white";
             temp.getData().distance = Integer.MAX_VALUE;
             temp.getData().parent = null;
+            if(temp.getData().nodeKey==1002597)
+                j++;
             temp = temp.next;
         }
         source.color = "gray";

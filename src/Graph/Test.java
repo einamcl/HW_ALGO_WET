@@ -320,13 +320,6 @@ public class Test
                     T = G.scc();
                     int j=0;
                     SCC_NODE<GraphNode>grandson=T.source.getLeft_child();
-                    while(grandson!=null)
-                    {
-                            j++;
-                        if(grandson.getLeft_child()!=null)
-                            outStream.writeBytes("Grandson:" + grandson.getLeft_child().getValue() + System.lineSeparator());
-                        grandson=grandson.getRight_sibling();
-                    }
                     outStream.writeBytes("Print in layers after SCC:" + System.lineSeparator());
                     T.printByLayer(outStream);
                     outStream.writeBytes(System.lineSeparator());
